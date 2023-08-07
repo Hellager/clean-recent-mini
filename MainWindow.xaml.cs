@@ -23,8 +23,11 @@ namespace clean_recent_mini
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public MainWindow()
         {
+            Logger.Debug("Initialize project");
+
             InitializeComponent();
         }
     }
