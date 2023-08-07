@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NLog;
+using FramePFX.Themes;
+using Newtonsoft.Json;
 
 namespace clean_recent_mini
 {
