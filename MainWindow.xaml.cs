@@ -24,11 +24,32 @@ namespace clean_recent_mini
     public partial class MainWindow : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private bool dark_mode = false;
+
         public MainWindow()
         {
             Logger.Debug("Initialize project");
 
             InitializeComponent();
+
+            change_theme();
+        }
+
+        private void change_theme()
+        {
+            this.dark_mode = !this.dark_mode;
+
+            // About theme change https://github.com/AngryCarrot789/WPFDarkTheme
+            if (this.dark_mode)
+            {
+                ThemesController.SetTheme(ThemeType.SoftDark);
+            }
+            else
+            {
+                ThemesController.SetTheme(ThemeType.LightTheme);
+            }
+
+            Logger.Debug("Set dark mode to: " + this.dark_mode);
         }
     }
 }
