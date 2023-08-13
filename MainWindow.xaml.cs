@@ -25,6 +25,7 @@ namespace clean_recent_mini
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private bool dark_mode = false;
+        private string language = "en-US";
 
         public MainWindow()
         {
@@ -33,6 +34,7 @@ namespace clean_recent_mini
             InitializeComponent();
 
             change_theme();
+            change_lang();
         }
 
         private void change_theme()
@@ -50,6 +52,13 @@ namespace clean_recent_mini
             }
 
             Logger.Debug("Set dark mode to: " + this.dark_mode);
+        }
+
+        private void change_lang()
+        {
+            this.language = (this.language == "en-US" ? "zh-CN" : "en-US");
+
+            System.Windows.Application.Current.Resources.MergedDictionaries[3] = new ResourceDictionary() { Source = new Uri($"Locale/{this.language}.xaml", UriKind.Relative) };
         }
     }
 }

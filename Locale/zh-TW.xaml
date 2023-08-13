@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppName">
+        幾淨
+    </sys:String>
+    <sys:String x:Key="LanguageEnglish">
+        英語
+    </sys:String>
+    <sys:String x:Key="LanguageSimplifiedChinese">
+        簡中
+    </sys:String>
+    <sys:String x:Key="LanguageTraditionalChinesee">
+        繁中
+    </sys:String>
+    <sys:String x:Key="LanguageFrench">
+        法語
+    </sys:String>
+    <sys:String x:Key="LanguageRussian">
+        俄語
+    </sys:String>
+</ResourceDictionary>
