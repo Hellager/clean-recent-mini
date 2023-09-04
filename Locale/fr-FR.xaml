@@ -19,4 +19,44 @@
     <sys:String x:Key="LanguageRussian">
         Russe
     </sys:String>
+
+    <!-- Menu List-->
+    <sys:String x:Key="MenuStatus">
+        Statut
+    </sys:String>
+    <sys:String x:Key="MenuFilter">
+        Filtre
+    </sys:String>
+    <sys:String x:Key="MenuConfig">
+        Config
+    </sys:String>
+
+    <!-- Menu Status -->
+    <sys:String x:Key="RecentFiles">
+        Fichiers récents
+    </sys:String>
+    <sys:String x:Key="QuickAccess">
+        Accès rapide
+    </sys:String>
+    <sys:String x:Key="FrequentFolders">
+        Dossiers fréquents
+    </sys:String>
+    <sys:String x:Key="InBlacklist">
+        Dans la liste noire
+    </sys:String>
+    <sys:String x:Key="InCleanlist">
+        dans Cleanlist
+    </sys:String>
+    <sys:String x:Key="InWhitelist">
+        Dans la liste blanche
+    </sys:String>
+    <sys:String x:Key="CleandFiles">
+        Fichiers nettoyés
+    </sys:String>
+    <sys:String x:Key="CleanTimes">
+        Temps propres
+    </sys:String>
+    <sys:String x:Key="CleanedFolders">
+        Dossiers nettoyés
+    </sys:String>
 </ResourceDictionary>

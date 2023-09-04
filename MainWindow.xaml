@@ -5,9 +5,113 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:clean_recent_mini"
         mc:Ignorable="d"
+        Closing="Window_Closing"
+        ContentRendered="Window_ContentRendered" 
         Style="{StaticResource CustomWindowStyle}"
-        Title="{DynamicResource AppName}" Height="360" Width="500">
-    <Grid>
+        Title="{DynamicResource AppName}" Height="360" Width="500" MinHeight="360" MinWidth="500" WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Grid x:Name="MainMenu" DockPanel.Dock="Left" Width="100" Margin="0,0,0,-2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
 
-    </Grid>
+            <Button x:Name="MenuStatus" Grid.Row="0" Content="{DynamicResource MenuStatus}" Click="On_MenuStatus_Click"/>
+            <Button x:Name="MenuFilter" Grid.Row="1" Content="{DynamicResource MenuFilter}" Click="On_MenuFilter_Click"/>
+            <Button x:Name="MenuConfig" Grid.Row="2" Content="{DynamicResource MenuConfig}" Click="On_MenuConfig_Click"/>
+        </Grid>
+
+        <Grid x:Name="Container"  DockPanel.Dock="Right">
+            <TabControl x:Name="ContainerController" Margin="0,-2,0,-2" SelectedIndex="2">
+                <TabItem Header="Status" Visibility="Collapsed">
+                    <Grid x:Name="StatusGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="3*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Row="0" Grid.Column="0"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,-2,0,0">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelRecentFiles" Text="{DynamicResource RecentFiles}"/>
+                                <TextBlock x:Name="ValueRecentFiles" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,-2,0,0">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelQuickAccess" Text="{DynamicResource QuickAccess}"/>
+                                <TextBlock x:Name="ValueQuickAccess" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="2"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0,-2, -2, 0">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelFrequentFolders" Text="{DynamicResource FrequentFolders}"/>
+                                <TextBlock x:Name="ValueFrequentFolders" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,0">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelInBlacklist" Text="{DynamicResource InBlacklist}"/>
+                                <TextBlock x:Name="ValueInBlacklist" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,0">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelInCleanlist" Text="{DynamicResource InCleanlist}"/>
+                                <TextBlock x:Name="ValueInCleanlist" Text="0 / 20" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="2"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0, 0, 0, 0">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelInWhitelist" Text="{DynamicResource InWhitelist}"/>
+                                <TextBlock x:Name="ValueInWhitelist" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="0"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,-1">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelCleanedFiles" Text="{DynamicResource CleandFiles}"/>
+                                <TextBlock x:Name="ValueCleanedFiles" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="1"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,-1">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelCleanTimes" Text="{DynamicResource CleanTimes}"/>
+                                <TextBlock x:Name="ValueCleanTimes" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="2"
+                                BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0, 0, 0, -1">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock x:Name="LabelCleanedFolders" Text="{DynamicResource CleanedFolders}"/>
+                                <TextBlock x:Name="ValueCleanedFolders" Text="0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
 </Window>

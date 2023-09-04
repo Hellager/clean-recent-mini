@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppName">
-        Clean Recent
+        Clean Recent Mini
     </sys:String>
     <sys:String x:Key="LanguageEnglish">
         English
@@ -19,4 +19,45 @@
     <sys:String x:Key="LanguageRussian">
         Russian
     </sys:String>
+
+    <!-- Menu List-->
+    <sys:String x:Key="MenuStatus">
+        Status
+    </sys:String>
+    <sys:String x:Key="MenuFilter">
+        Filter
+    </sys:String>
+    <sys:String x:Key="MenuConfig">
+        Config
+    </sys:String>
+
+    <!-- Menu Status -->
+    <sys:String x:Key="RecentFiles">
+        Recent Files
+    </sys:String>
+    <sys:String x:Key="QuickAccess">
+        Quick Access
+    </sys:String>
+    <sys:String x:Key="FrequentFolders">
+        Frequent Folders
+    </sys:String>
+    <sys:String x:Key="InBlacklist">
+        In Blacklist
+    </sys:String>
+    <sys:String x:Key="InCleanlist">
+        In Cleanlist
+    </sys:String>
+    <sys:String x:Key="InWhitelist">
+        In Whitelist
+    </sys:String>
+    <sys:String x:Key="CleandFiles">
+        Cleaned Files
+    </sys:String>
+    <sys:String x:Key="CleanTimes">
+        Clean Times
+    </sys:String>
+    <sys:String x:Key="CleanedFolders">
+        Cleaned Folders
+    </sys:String>
+
 </ResourceDictionary>

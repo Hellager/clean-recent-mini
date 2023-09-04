@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using NLog;
 using FramePFX.Themes;
 using Newtonsoft.Json;
+using QuickAccess;
 
 namespace clean_recent_mini
 {
@@ -24,41 +25,68 @@ namespace clean_recent_mini
     public partial class MainWindow : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private bool dark_mode = false;
-        private string language = "en-US";
+
+        private QuickAccessHandler quickAccessHandler = new QuickAccessHandler();
 
         public MainWindow()
         {
             Logger.Debug("Initialize project");
 
             InitializeComponent();
-
-            change_theme();
-            change_lang();
         }
 
-        private void change_theme()
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.dark_mode = !this.dark_mode;
-
-            // About theme change https://github.com/AngryCarrot789/WPFDarkTheme
-            if (this.dark_mode)
-            {
-                ThemesController.SetTheme(ThemeType.SoftDark);
-            }
-            else
-            {
-                ThemesController.SetTheme(ThemeType.LightTheme);
-            }
-
-            Logger.Debug("Set dark mode to: " + this.dark_mode);
+            Logger.Debug("Window Closing");
         }
 
-        private void change_lang()
+        private void Window_ContentRendered(object sender, EventArgs e)
         {
-            this.language = (this.language == "en-US" ? "zh-CN" : "en-US");
+            Logger.Debug("Window rendered content");
 
-            System.Windows.Application.Current.Resources.MergedDictionaries[3] = new ResourceDictionary() { Source = new Uri($"Locale/{this.language}.xaml", UriKind.Relative) };
+            this.Update_StatusMenu();
         }
+
+        /******** Change Menu ********/
+        private void On_MenuStatus_Click(object sender, RoutedEventArgs e)
+        {
+            Logger.Debug("Switch to status menu");
+
+            this.Update_StatusMenu();
+
+            this.ContainerController.SelectedIndex = 0;
+        }
+
+        private void On_MenuFilter_Click(object sender, RoutedEventArgs e)
+        {
+            Logger.Debug("Switch to filter menu");
+
+            this.ContainerController.SelectedIndex = 1;
+        }
+
+        private void On_MenuConfig_Click(object sender, RoutedEventArgs e)
+        {
+            Logger.Debug("Switch to config menu");
+
+            this.ContainerController.SelectedIndex = 2;
+        }
+
+        /************* About Status Menu ******************/
+        private void Update_QuickAccess_Status()
+        {
+            Dictionary<string, string> quick_access = this.quickAccessHandler.GetQuickAccessDict();
+            Dictionary<string, string> frequent_folders = this.quickAccessHandler.GetFrequentFolders();
+            Dictionary<string, string> recent_files = this.quickAccessHandler.GetRecentFiles();
+
+            this.ValueRecentFiles.Text = recent_files.Count.ToString();
+            this.ValueQuickAccess.Text = quick_access.Count.ToString();
+            this.ValueFrequentFolders.Text = frequent_folders.Count.ToString();
+        }
+
+        private void Update_StatusMenu()
+        {
+            this.Update_QuickAccess_Status();
+        }
+
     }
 }

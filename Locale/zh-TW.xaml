@@ -19,4 +19,44 @@
     <sys:String x:Key="LanguageRussian">
         俄語
     </sys:String>
+
+    <!-- Menu List-->
+    <sys:String x:Key="MenuStatus">
+        狀態
+    </sys:String>
+    <sys:String x:Key="MenuFilter">
+        篩選
+    </sys:String>
+    <sys:String x:Key="MenuConfig">
+        設置
+    </sys:String>
+
+    <!-- Menu Status -->
+    <sys:String x:Key="RecentFiles">
+        最近使用的文件
+    </sys:String>
+    <sys:String x:Key="QuickAccess">
+        快速訪問
+    </sys:String>
+    <sys:String x:Key="FrequentFolders">
+        常用文件夾
+    </sys:String>
+    <sys:String x:Key="InBlacklist">
+        在黑名單中
+    </sys:String>
+    <sys:String x:Key="InCleanlist">
+        待清理
+    </sys:String>
+    <sys:String x:Key="InWhitelist">
+        在白名單中
+    </sys:String>
+    <sys:String x:Key="CleandFiles">
+        已清理文件
+    </sys:String>
+    <sys:String x:Key="CleanTimes">
+        已清理次數
+    </sys:String>
+    <sys:String x:Key="CleanedFolders">
+        已清理文件夾
+    </sys:String>
 </ResourceDictionary>
