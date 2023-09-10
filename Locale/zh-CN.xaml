@@ -4,20 +4,41 @@
     <sys:String x:Key="AppName">
         几净
     </sys:String>
-    <sys:String x:Key="LanguageEnglish">
-        英语
+
+    <!-- General -->
+    <sys:String x:Key="Disabled">
+        禁用
     </sys:String>
-    <sys:String x:Key="LanguageSimplifiedChinese">
-        简中
+    <sys:String x:Key="Enabled">
+        启用
     </sys:String>
-    <sys:String x:Key="LanguageTraditionalChinesee">
-        繁中
+    <sys:String x:Key="Blacklist">
+        黑名单
     </sys:String>
-    <sys:String x:Key="LanguageFrench">
-        法语
+    <sys:String x:Key="Whitelist">
+        白名单
     </sys:String>
-    <sys:String x:Key="LanguageRussian">
-        俄语
+
+    <!-- Quick Access -->
+    <sys:String x:Key="QuickAccess">
+        快速访问
+    </sys:String>
+    <sys:String x:Key="RecentFiles">
+        最近使用的文件
+    </sys:String>
+    <sys:String x:Key="FrequentFolders">
+        常用文件夹
+    </sys:String>
+
+    <!-- Notify Icon -->
+    <sys:String x:Key="Show">
+        显示
+    </sys:String>
+    <sys:String x:Key="Hide">
+        隐藏
+    </sys:String>
+    <sys:String x:Key="Exit">
+        退出
     </sys:String>
 
     <!-- Menu List-->
@@ -32,15 +53,6 @@
     </sys:String>
 
     <!-- Menu Status -->
-    <sys:String x:Key="RecentFiles">
-        最近使用的文件
-    </sys:String>
-    <sys:String x:Key="QuickAccess">
-        快速访问
-    </sys:String>
-    <sys:String x:Key="FrequentFolders">
-        常用文件夹
-    </sys:String>
     <sys:String x:Key="InBlacklist">
         在黑名单中
     </sys:String>
@@ -58,5 +70,119 @@
     </sys:String>
     <sys:String x:Key="CleanedFolders">
         已清理文件夹
+    </sys:String>
+
+    <!-- Menu Config -->
+    <sys:String x:Key="AppConfig">
+        程序设置
+    </sys:String>
+    <sys:String x:Key="CleanConfig">
+        清理设置
+    </sys:String>
+
+    <!-- App Config -->
+    <sys:String x:Key="LabelTheme">
+        主题
+    </sys:String>
+    <sys:String x:Key="ThemeLight">
+        浅色
+    </sys:String>
+    <sys:String x:Key="ThemeDark">
+        深色
+    </sys:String>
+    <sys:String x:Key="LabelLanguage">
+        语言
+    </sys:String>
+    <sys:String x:Key="LanguageEnglish">
+        英语
+    </sys:String>
+    <sys:String x:Key="LanguageSimplifiedChinese">
+        简体中文
+    </sys:String>
+    <sys:String x:Key="LanguageTraditionalChinesee">
+        繁体中文
+    </sys:String>
+    <sys:String x:Key="LanguageFrench">
+        法语
+    </sys:String>
+    <sys:String x:Key="LanguageRussian">
+        俄语
+    </sys:String>
+    <sys:String x:Key="LabelAutoStart">
+        自启动
+    </sys:String>
+    <sys:String x:Key="LabelCloseOption">
+        关闭
+    </sys:String>
+    <sys:String x:Key="CloseOptionHide">
+        隐藏
+    </sys:String>
+    <sys:String x:Key="CloseOptionQuit">
+        退出
+    </sys:String>
+    <sys:String x:Key="LabelSystem">
+        系统
+    </sys:String>
+    <sys:String x:Key="SystemSupport">
+        默认支持
+    </sys:String>
+    <sys:String x:Key="SystemRequireMenuItems">
+        需设置菜单项
+    </sys:String>
+    <sys:String x:Key="LabelVersion">
+        版本
+    </sys:String>
+
+    <!-- Clean Config -->
+    <sys:String x:Key="LabelCleanState">
+        状态
+    </sys:String>
+    <sys:String x:Key="StateStop">
+        停止
+    </sys:String>
+    <sys:String x:Key="StateAuto">
+        自动
+    </sys:String>
+    <sys:String x:Key="StateManual">
+        手动
+    </sys:String>
+    <sys:String x:Key="LabelCleanTrigger">
+        触发
+    </sys:String>
+    <sys:String x:Key="TriggerPeriod">
+        定期
+    </sys:String>
+    <sys:String x:Key="TriggerMonitor">
+        监控
+    </sys:String>
+    <sys:String x:Key="LabelCleanPolicy">
+        策略
+    </sys:String>
+    <sys:String x:Key="PolicyCleanBlacklist">
+        清理黑名单
+    </sys:String>
+    <sys:String x:Key="PolicyKeepWhitelist">
+        保留白名单
+    </sys:String>
+    <sys:String x:Key="PolicyEmptyList">
+        清空列表
+    </sys:String>
+    <sys:String x:Key="LabelCleanCategory">
+        分类
+    </sys:String>
+    <sys:String x:Key="LabelCleanInterval">
+        间隔
+    </sys:String>
+    <sys:String x:Key="IntervalTenMinutes">
+        10分钟
+    </sys:String>
+    <sys:String x:Key="IntervalHalfHour">
+        30分钟
+    </sys:String>
+    <sys:String x:Key="IntervalAnHour">
+        1小时
+    </sys:String>
+    <sys:String x:Key="LabelCleanMenuItems">
+        菜单项
     </sys:String>
 </ResourceDictionary>

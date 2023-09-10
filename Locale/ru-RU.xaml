@@ -4,20 +4,41 @@
     <sys:String x:Key="AppName">
         Чистый недавний
     </sys:String>
-    <sys:String x:Key="LanguageEnglish">
-        Английский
+    
+    <!-- General -->
+    <sys:String x:Key="Disabled">
+        Неполноценный
     </sys:String>
-    <sys:String x:Key="LanguageSimplifiedChinese">
-        Упрощенный китайский
+    <sys:String x:Key="Enabled">
+        Включено
     </sys:String>
-    <sys:String x:Key="LanguageTraditionalChinesee">
-        Традиционный китайский
+    <sys:String x:Key="Blacklist">
+        Черный список
     </sys:String>
-    <sys:String x:Key="LanguageFrench">
-        Французский
+    <sys:String x:Key="Whitelist">
+        Белый список
     </sys:String>
-    <sys:String x:Key="LanguageRussian">
-        Русский
+
+    <!-- Quick Access -->
+    <sys:String x:Key="QuickAccess">
+        Быстрый доступ
+    </sys:String>
+    <sys:String x:Key="RecentFiles">
+        Недавние файлы
+    </sys:String>
+    <sys:String x:Key="FrequentFolders">
+        Частые папки
+    </sys:String>
+
+    <!-- Notify Icon -->
+    <sys:String x:Key="Show">
+        Показывать
+    </sys:String>
+    <sys:String x:Key="Hide">
+        Скрывать
+    </sys:String>
+    <sys:String x:Key="Exit">
+        Выход
     </sys:String>
 
     <!-- Menu List-->
@@ -32,15 +53,6 @@
     </sys:String>
 
     <!-- Menu Status -->
-    <sys:String x:Key="RecentFiles">
-        Недавние файлы
-    </sys:String>
-    <sys:String x:Key="QuickAccess">
-        Быстрый доступ
-    </sys:String>
-    <sys:String x:Key="FrequentFolders">
-        Частые папки
-    </sys:String>
     <sys:String x:Key="InBlacklist">
         В черном списке
     </sys:String>
@@ -58,5 +70,119 @@
     </sys:String>
     <sys:String x:Key="CleanedFolders">
         Очищенные папки
+    </sys:String>
+
+    <!-- Menu Config -->
+    <sys:String x:Key="AppConfig">
+        Приложение конфигурация
+    </sys:String>
+    <sys:String x:Key="CleanConfig">
+        Чистый конфигурация
+    </sys:String>
+
+    <!-- App Config -->
+    <sys:String x:Key="LabelTheme">
+        Тема
+    </sys:String>
+    <sys:String x:Key="ThemeLight">
+        Свет
+    </sys:String>
+    <sys:String x:Key="ThemeDark">
+        Темный
+    </sys:String>
+    <sys:String x:Key="LabelLanguage">
+        Язык
+    </sys:String>
+    <sys:String x:Key="LanguageEnglish">
+        Английский
+    </sys:String>
+    <sys:String x:Key="LanguageSimplifiedChinese">
+        Упрощенный китайский
+    </sys:String>
+    <sys:String x:Key="LanguageTraditionalChinesee">
+        Традиционный китайский
+    </sys:String>
+    <sys:String x:Key="LanguageFrench">
+        Французский
+    </sys:String>
+    <sys:String x:Key="LanguageRussian">
+        Русский
+    </sys:String>
+    <sys:String x:Key="LabelAutoStart">
+        Запускать
+    </sys:String>
+    <sys:String x:Key="LabelCloseOption">
+        Закрывать
+    </sys:String>
+    <sys:String x:Key="CloseOptionHide">
+        Скрывать
+    </sys:String>
+    <sys:String x:Key="CloseOptionQuit">
+        Покидать
+    </sys:String>
+    <sys:String x:Key="LabelSystem">
+        Система
+    </sys:String>
+    <sys:String x:Key="SystemSupport">
+        Поддерживать
+    </sys:String>
+    <sys:String x:Key="SystemRequireMenuItems">
+        Требуются пункты меню
+    </sys:String>
+    <sys:String x:Key="LabelVersion">
+        Версия
+    </sys:String>
+
+    <!-- Clean Config -->
+    <sys:String x:Key="LabelCleanState">
+        состояние
+    </sys:String>
+    <sys:String x:Key="StateStop">
+        Стоп
+    </sys:String>
+    <sys:String x:Key="StateAuto">
+        Авто
+    </sys:String>
+    <sys:String x:Key="StateManual">
+        Руководство
+    </sys:String>
+    <sys:String x:Key="LabelCleanTrigger">
+        Метод
+    </sys:String>
+    <sys:String x:Key="TriggerPeriod">
+        Период
+    </sys:String>
+    <sys:String x:Key="TriggerMonitor">
+        Монитор
+    </sys:String>
+    <sys:String x:Key="LabelCleanPolicy">
+        Политика
+    </sys:String>
+    <sys:String x:Key="PolicyCleanBlacklist">
+        Очистить черный список
+    </sys:String>
+    <sys:String x:Key="PolicyKeepWhitelist">
+        Держите белый список
+    </sys:String>
+    <sys:String x:Key="PolicyEmptyList">
+        Пустой список
+    </sys:String>
+    <sys:String x:Key="LabelCleanCategory">
+        Категория
+    </sys:String>
+    <sys:String x:Key="LabelCleanInterval">
+        Интервал
+    </sys:String>
+    <sys:String x:Key="IntervalTenMinutes">
+        10 минут
+    </sys:String>
+    <sys:String x:Key="IntervalHalfHour">
+        30 минут
+    </sys:String>
+    <sys:String x:Key="IntervalAnHour">
+        1 час
+    </sys:String>
+    <sys:String x:Key="LabelCleanMenuItems">
+        Пункты меню
     </sys:String>
 </ResourceDictionary>

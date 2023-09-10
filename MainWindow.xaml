@@ -3,12 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         xmlns:local="clr-namespace:clean_recent_mini"
         mc:Ignorable="d"
         Closing="Window_Closing"
         ContentRendered="Window_ContentRendered" 
         Style="{StaticResource CustomWindowStyle}"
-        Title="{DynamicResource AppName}" Height="360" Width="500" MinHeight="360" MinWidth="500" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource AppName}" Height="360" Width="580" MinHeight="360" MinWidth="500" WindowStartupLocation="CenterScreen">
     <DockPanel>
         <Grid x:Name="MainMenu" DockPanel.Dock="Left" Width="100" Margin="0,0,0,-2">
             <Grid.RowDefinitions>
@@ -109,6 +110,148 @@
                                 <TextBlock x:Name="ValueCleanedFolders" Text="0" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
+
+                        <Button x:Name="ManualCleanButtonLight" Visibility="Collapsed" Background="Transparent" ToolTip="Clean" BorderThickness="0" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,10" Click="On_ManualClean_Button_Clicked">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="16"/>
+                                </Style>
+                            </Button.Resources>
+
+                            <StackPanel>
+                                <!-- https://github.com/ElinamLLC/SharpVectors -->
+                                <Image Source="{svgc:SvgImage Source=Assets/Icons/broomlight.svg, AppName=CleanRecent}" Width="32" Height="32" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="ManualCleanButtonDark" Visibility="Collapsed" Background="Transparent" ToolTip="Clean" BorderThickness="0" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,10" Click="On_ManualClean_Button_Clicked">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="16"/>
+                                </Style>
+                            </Button.Resources>
+
+                            <StackPanel>
+                                <Image Source="{svgc:SvgImage Source=Assets/Icons/broomdark.svg, AppName=CleanRecent}" Width="32" Height="32" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Filter" Visibility="Collapsed">
+
+                </TabItem>
+
+                <TabItem Header="Config" Visibility="Collapsed">
+                    <Grid x:Name="ConfigContainer">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <GroupBox Grid.Row="0" Header="{DynamicResource AppConfig}" Style="{StaticResource DefaultGroupbox}">
+                            <Grid x:Name="AppConfigContainer">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="3*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*" />
+                                    <ColumnDefinition Width="2.5*" />
+                                    <ColumnDefinition Width="2.5*" />
+                                    <ColumnDefinition Width="2.5*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label x:Name="LabelThemeSelector" Content="{DynamicResource LabelTheme}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="ThemeSelector" SelectedIndex="0" Grid.Row="0" Grid.Column="1" SelectionChanged="On_Theme_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource ThemeLight}" />
+                                    <ComboBoxItem Content="{DynamicResource ThemeDark}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelLanguageSelector" Content="{DynamicResource LabelLanguage}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="LanguageSelector" SelectedIndex="0" Grid.Row="0" Grid.Column="3" SelectionChanged="On_Language_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource LanguageEnglish}" />
+                                    <ComboBoxItem Content="{DynamicResource LanguageSimplifiedChinese}" />
+                                    <ComboBoxItem Content="{DynamicResource LanguageTraditionalChinesee}" />
+                                    <ComboBoxItem Content="{DynamicResource LanguageFrench}" />
+                                    <ComboBoxItem Content="{DynamicResource LanguageRussian}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelAutoStartSelector" Content="{DynamicResource LabelAutoStart}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <ComboBox x:Name="AutoStartSelector" SelectedIndex="0" Grid.Row="1" Grid.Column="1" SelectionChanged="On_Autostart_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource Disabled}" />
+                                    <ComboBoxItem Content="{DynamicResource Enabled}" />
+                                </ComboBox>
+
+                                <Label x:Name="MenuConfigAppConfigCloseOption" Content="{DynamicResource LabelCloseOption}" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <ComboBox x:Name="CloseOptionSelector" SelectedIndex="0" Grid.Row="1" Grid.Column="3" SelectionChanged="On_Closeoption_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource CloseOptionHide}" />
+                                    <ComboBoxItem Content="{DynamicResource CloseOptionQuit}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelSupportSystem" Content="{DynamicResource LabelSystem}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Label x:Name="SupportSystem" Content="{DynamicResource SystemSupport}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                <Label x:Name="LabelVersion" Content="{DynamicResource LabelVersion}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Label x:Name="Version" Content="v0.0.0" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="1" Header="{DynamicResource CleanConfig}"  Style="{StaticResource DefaultGroupbox}">
+                            <Grid x:Name="CleanConfigContainer">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="3*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*" />
+                                    <ColumnDefinition Width="2.5*" />
+                                    <ColumnDefinition Width="2.5*" />
+                                    <ColumnDefinition Width="2.5*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label x:Name="LabelActionState" Content="{DynamicResource LabelCleanState}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="ActionStateSelector" SelectedIndex="0" Grid.Row="0" Grid.Column="1" SelectionChanged="On_ActionState_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource StateStop}" />
+                                    <ComboBoxItem Content="{DynamicResource StateAuto}" />
+                                    <ComboBoxItem Content="{DynamicResource StateManual}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelCleanMethod" Content="{DynamicResource LabelCleanTrigger}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="CleanMethodSelector" SelectedIndex="0" Grid.Row="0" Grid.Column="3" SelectionChanged="On_CleanMethod_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource TriggerPeriod}" />
+                                    <ComboBoxItem Content="{DynamicResource TriggerMonitor}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelCleanPolicy" Content="{DynamicResource LabelCleanPolicy}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="CleanPolicySelector" SelectedIndex="0" Grid.Row="1" Grid.Column="1" SelectionChanged="On_CleanPolicy_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource PolicyCleanBlacklist}" />
+                                    <ComboBoxItem Content="{DynamicResource PolicyKeepWhitelist}" />
+                                    <ComboBoxItem Content="{DynamicResource PolicyEmptyList}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelCleanCategory" Content="{DynamicResource LabelCleanCategory}" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="CleanCategorySelector" SelectedIndex="0" Grid.Row="1" Grid.Column="3" SelectionChanged="On_CleanCategory_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource QuickAccess}" />
+                                    <ComboBoxItem Content="{DynamicResource RecentFiles}" />
+                                    <ComboBoxItem Content="{DynamicResource FrequentFolders}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelCleanInterval" Content="{DynamicResource LabelCleanInterval}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <ComboBox x:Name="CleanIntervalSelector" SelectedIndex="0" Grid.Row="2" Grid.Column="1" SelectionChanged="On_CleanInterval_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource IntervalTenMinutes}" />
+                                    <ComboBoxItem Content="{DynamicResource IntervalHalfHour}" />
+                                    <ComboBoxItem Content="{DynamicResource IntervalAnHour}" />
+                                </ComboBox>
+
+                                <Label x:Name="LabelCommandNames" Content="{DynamicResource LabelCleanMenuItems}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <TextBox x:Name="CommandNames" Grid.Row="2" Grid.Column="3" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            </Grid>
+                        </GroupBox>
                     </Grid>
                 </TabItem>
             </TabControl>

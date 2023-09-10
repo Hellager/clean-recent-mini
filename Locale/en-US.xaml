@@ -4,20 +4,41 @@
     <sys:String x:Key="AppName">
         Clean Recent Mini
     </sys:String>
-    <sys:String x:Key="LanguageEnglish">
-        English
+
+    <!-- General -->
+    <sys:String x:Key="Disabled">
+        Disabled
     </sys:String>
-    <sys:String x:Key="LanguageSimplifiedChinese">
-        Simplified Chinese
+    <sys:String x:Key="Enabled">
+        Enabled
     </sys:String>
-    <sys:String x:Key="LanguageTraditionalChinesee">
-        Traditional Chinese
+    <sys:String x:Key="Blacklist">
+        Blacklist
     </sys:String>
-    <sys:String x:Key="LanguageFrench">
-        French
+    <sys:String x:Key="Whitelist">
+        Whitelist
     </sys:String>
-    <sys:String x:Key="LanguageRussian">
-        Russian
+
+    <!-- Quick Access -->
+    <sys:String x:Key="QuickAccess">
+        Quick Access
+    </sys:String>
+    <sys:String x:Key="RecentFiles">
+        Recent Files
+    </sys:String>
+    <sys:String x:Key="FrequentFolders">
+        Frequent Folders
+    </sys:String>
+
+    <!-- Notify Icon -->
+    <sys:String x:Key="Show">
+        Show
+    </sys:String>
+    <sys:String x:Key="Hide">
+        Hide
+    </sys:String>
+    <sys:String x:Key="Exit">
+        Exit
     </sys:String>
 
     <!-- Menu List-->
@@ -32,15 +53,6 @@
     </sys:String>
 
     <!-- Menu Status -->
-    <sys:String x:Key="RecentFiles">
-        Recent Files
-    </sys:String>
-    <sys:String x:Key="QuickAccess">
-        Quick Access
-    </sys:String>
-    <sys:String x:Key="FrequentFolders">
-        Frequent Folders
-    </sys:String>
     <sys:String x:Key="InBlacklist">
         In Blacklist
     </sys:String>
@@ -58,6 +70,120 @@
     </sys:String>
     <sys:String x:Key="CleanedFolders">
         Cleaned Folders
+    </sys:String>
+
+    <!-- Menu Config -->
+    <sys:String x:Key="AppConfig">
+        App Config
+    </sys:String>
+    <sys:String x:Key="CleanConfig">
+        Clean Config
+    </sys:String>
+
+    <!-- App Config -->
+    <sys:String x:Key="LabelTheme">
+        Theme
+    </sys:String>
+    <sys:String x:Key="ThemeLight">
+        Light
+    </sys:String>
+    <sys:String x:Key="ThemeDark">
+        Dark
+    </sys:String>
+    <sys:String x:Key="LabelLanguage">
+        Language
+    </sys:String>
+    <sys:String x:Key="LanguageEnglish">
+        English
+    </sys:String>
+    <sys:String x:Key="LanguageSimplifiedChinese">
+        Simplified Chinese
+    </sys:String>
+    <sys:String x:Key="LanguageTraditionalChinesee">
+        Traditional Chinese
+    </sys:String>
+    <sys:String x:Key="LanguageFrench">
+        French
+    </sys:String>
+    <sys:String x:Key="LanguageRussian">
+        Russian
+    </sys:String>
+    <sys:String x:Key="LabelAutoStart">
+        AutoStart
+    </sys:String>
+    <sys:String x:Key="LabelCloseOption">
+        Close
+    </sys:String>
+    <sys:String x:Key="CloseOptionHide">
+        Hide
+    </sys:String>
+    <sys:String x:Key="CloseOptionQuit">
+        Quit
+    </sys:String>
+    <sys:String x:Key="LabelSystem">
+        System
+    </sys:String>
+    <sys:String x:Key="SystemSupport">
+        Support
+    </sys:String>
+    <sys:String x:Key="SystemRequireMenuItems">
+        Menu Items Required
+    </sys:String>
+    <sys:String x:Key="LabelVersion">
+        Version
+    </sys:String>
+
+    <!-- Clean Config -->
+    <sys:String x:Key="LabelCleanState">
+        State
+    </sys:String>
+    <sys:String x:Key="StateStop">
+        Stop
+    </sys:String>
+    <sys:String x:Key="StateAuto">
+        Auto
+    </sys:String>
+    <sys:String x:Key="StateManual">
+        Manual
+    </sys:String>
+    <sys:String x:Key="LabelCleanTrigger">
+        Trigger
+    </sys:String>
+    <sys:String x:Key="TriggerPeriod">
+        Period
+    </sys:String>
+    <sys:String x:Key="TriggerMonitor">
+        Monitor
+    </sys:String>
+    <sys:String x:Key="LabelCleanPolicy">
+        Policy
+    </sys:String>
+    <sys:String x:Key="PolicyCleanBlacklist">
+        Clean Blacklist
+    </sys:String>
+    <sys:String x:Key="PolicyKeepWhitelist">
+        Keep Whitelist
+    </sys:String>
+    <sys:String x:Key="PolicyEmptyList">
+        Empty List
+    </sys:String>
+    <sys:String x:Key="LabelCleanCategory">
+        Category
+    </sys:String>
+    <sys:String x:Key="LabelCleanInterval">
+        Interval
+    </sys:String>
+    <sys:String x:Key="IntervalTenMinutes">
+        10 minutes
+    </sys:String>
+    <sys:String x:Key="IntervalHalfHour">
+        30 minutes
+    </sys:String>
+    <sys:String x:Key="IntervalAnHour">
+        1 hour
+    </sys:String>
+    <sys:String x:Key="LabelCleanMenuItems">
+        Menu Items
     </sys:String>
 
 </ResourceDictionary>
