@@ -18,6 +18,30 @@
     <sys:String x:Key="Whitelist">
         Белый список
     </sys:String>
+    <sys:String x:Key="Confirm">
+        Подтверждать
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        Отмена
+    </sys:String>
+    <sys:String x:Key="Search">
+        Поиск
+    </sys:String>
+    <sys:String x:Key="Append">
+        Добавлять
+    </sys:String>
+    <sys:String x:Key="Delete">
+        Удалить
+    </sys:String>
+    <sys:String x:Key="Import">
+        Импортировать
+    </sys:String>
+    <sys:String x:Key="Export">
+        Экспорт
+    </sys:String>
+    <sys:String x:Key="Edit">
+        Редактировать
+    </sys:String>
 
     <!-- Quick Access -->
     <sys:String x:Key="QuickAccess">
@@ -71,6 +95,27 @@
     <sys:String x:Key="CleanedFolders">
         Очищенные папки
     </sys:String>
+
+    <!-- Menu Filter -->
+    <sys:String x:Key="FilterSearchTooltip">
+        Поиск по ключевым словам
+    </sys:String>
+    <sys:String x:Key="TitleSelectAll">
+        Выбрать все
+    </sys:String>
+    <sys:String x:Key="TitleKeyword">
+        Ключевое слово
+    </sys:String>
+    <sys:String x:Key="TitleState">
+        Состояние
+    </sys:String>
+    <sys:String x:Key="TitleGroup">
+        Группа
+    </sys:String>
+    <sys:String x:Key="TitleAction">
+        Действие
+    </sys:String>
+
 
     <!-- Menu Config -->
     <sys:String x:Key="AppConfig">
@@ -185,4 +230,39 @@
     <sys:String x:Key="LabelCleanMenuItems">
         Пункты меню
     </sys:String>
+
+    <!-- Close Dialog -->
+    <sys:String x:Key="CloseDialogTitle">
+        Закрыть вариант
+    </sys:String>
+    <sys:String x:Key="CloseOptionMinimize">
+        Свернуть в трей
+    </sys:String>
+    <sys:String x:Key="CloseOptionExit">
+        Выходная программа
+    </sys:String>
+    <sys:String x:Key="CloseOptionRemember">
+        Помните вариант
+    </sys:String>
+
+    <!-- Filter Dialog -->
+    <sys:String x:Key="TitleAppendItem">
+        Добавить элемент
+    </sys:String>
+    <sys:String x:Key="TitleEditItem">
+        Редактировать пункт
+    </sys:String>
+    <sys:String x:Key="TitleImportItems">
+        Выберите импортные элементы
+    </sys:String>
+    <sys:String x:Key="TitleExportItems">
+        Выберите элементы экспорта
+    </sys:String>
+    <sys:String x:Key="TitleCleanItems">
+        Выберите чистые предметы
+    </sys:String>
+    <sys:String x:Key="TitlePath">
+        Путь
+    </sys:String>
+    
 </ResourceDictionary>

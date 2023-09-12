@@ -18,6 +18,30 @@
     <sys:String x:Key="Whitelist">
         Whitelist
     </sys:String>
+    <sys:String x:Key="Confirm">
+        Confirm
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        Cancel
+    </sys:String>
+    <sys:String x:Key="Search">
+        Search
+    </sys:String>
+    <sys:String x:Key="Append">
+        Append
+    </sys:String>
+    <sys:String x:Key="Delete">
+        Delete
+    </sys:String>
+    <sys:String x:Key="Import">
+        Import
+    </sys:String>
+    <sys:String x:Key="Export">
+        Export
+    </sys:String>
+    <sys:String x:Key="Edit">
+        Edit
+    </sys:String>
 
     <!-- Quick Access -->
     <sys:String x:Key="QuickAccess">
@@ -70,6 +94,26 @@
     </sys:String>
     <sys:String x:Key="CleanedFolders">
         Cleaned Folders
+    </sys:String>
+
+    <!-- Menu Filter -->
+    <sys:String x:Key="FilterSearchTooltip">
+        Search with keyword
+    </sys:String>
+    <sys:String x:Key="TitleSelectAll">
+        Select All
+    </sys:String>
+    <sys:String x:Key="TitleKeyword">
+        Keyword
+    </sys:String>
+    <sys:String x:Key="TitleState">
+        State
+    </sys:String>
+    <sys:String x:Key="TitleGroup">
+        Group
+    </sys:String>
+    <sys:String x:Key="TitleAction">
+        Action
     </sys:String>
 
     <!-- Menu Config -->
@@ -184,6 +228,40 @@
     </sys:String>
     <sys:String x:Key="LabelCleanMenuItems">
         Menu Items
+    </sys:String>
+
+    <!-- Close Dialog -->
+    <sys:String x:Key="CloseDialogTitle">
+        Close Option
+    </sys:String>
+    <sys:String x:Key="CloseOptionMinimize">
+        Minimize to tray
+    </sys:String>
+    <sys:String x:Key="CloseOptionExit">
+        Exit Program
+    </sys:String>
+    <sys:String x:Key="CloseOptionRemember">
+        Remember option
+    </sys:String>
+
+    <!-- Filter Dialog -->
+    <sys:String x:Key="TitleAppendItem">
+        Append Item
+    </sys:String>
+    <sys:String x:Key="TitleEditItem">
+        Edit Item
+    </sys:String>
+    <sys:String x:Key="TitleImportItems">
+        Select Import Items
+    </sys:String>
+    <sys:String x:Key="TitleExportItems">
+        Select Export Items
+    </sys:String>
+    <sys:String x:Key="TitleCleanItems">
+        Select Clean Items
+    </sys:String>
+    <sys:String x:Key="TitlePath">
+        Path
     </sys:String>
 
 </ResourceDictionary>

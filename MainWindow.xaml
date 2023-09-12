@@ -24,7 +24,7 @@
         </Grid>
 
         <Grid x:Name="Container"  DockPanel.Dock="Right">
-            <TabControl x:Name="ContainerController" Margin="0,-2,0,-2" SelectedIndex="2">
+            <TabControl x:Name="ContainerController" Margin="0,-2,0,-2" SelectedIndex="0">
                 <TabItem Header="Status" Visibility="Collapsed">
                     <Grid x:Name="StatusGrid">
                         <Grid.RowDefinitions>
@@ -139,7 +139,103 @@
                 </TabItem>
 
                 <TabItem Header="Filter" Visibility="Collapsed">
+                    <Grid x:Name="FilterContainer">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="8*" />
+                        </Grid.RowDefinitions>
 
+                        <Grid x:Name="FilterControlContainer" Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="5*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="FilterInputText" Text="{DynamicResource FilterSearchTooltip}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Button x:Name="FilterInputConfirmButton" Content="{DynamicResource Search}" Grid.Row="0" Grid.Column="1" Click="On_Filter_SearchButton_Click"/>
+
+                            <Button x:Name="FilterAppendButton" Content="{DynamicResource Append}" Grid.Row="1" Grid.Column="0" Click="On_Filter_AppendButton_Click"/>
+                            <Button x:Name="FilterDeleteButton" Content="{DynamicResource Delete}" Grid.Row="1" Grid.Column="1" Click="On_Filter_DeleteButton_Click"/>
+
+                            <Button x:Name="FilterImportButton" Content="{DynamicResource Import}" Grid.Row="2" Grid.Column="0" Click="On_Filter_ImportButton_Click"/>
+                            <Button x:Name="FilterExportButton" Content="{DynamicResource Export}" Grid.Row="2" Grid.Column="1" Click="On_Filter_ExportButton_Click"/>
+                        </Grid>
+
+                        <Grid x:Name="FilterListContainer" Grid.Row="1">
+                            <DataGrid x:Name="FilterlistTable" ItemsSource="{Binding}" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserAddRows="False">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="*">
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Content="{DynamicResource TitleSelectAll}" Uid="-1" Click="On_Filter_CheckBox_Checked" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Click="On_Filter_CheckBox_Checked" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*">
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{DynamicResource TitleKeyword}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Keyword}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*">
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{DynamicResource TitleState}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding StateDesp}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*">
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{DynamicResource TitleGroup}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding GroupDesp}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*">
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{DynamicResource TitleAction}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <Button Content="{DynamicResource Edit}" Click="On_Filter_EditButton_Click" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
                 </TabItem>
 
                 <TabItem Header="Config" Visibility="Collapsed">

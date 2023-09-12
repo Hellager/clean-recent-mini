@@ -18,6 +18,30 @@
     <sys:String x:Key="Whitelist">
         白名单
     </sys:String>
+    <sys:String x:Key="Confirm">
+        确认
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        取消
+    </sys:String>
+    <sys:String x:Key="Search">
+        搜索
+    </sys:String>
+    <sys:String x:Key="Append">
+        添加
+    </sys:String>
+    <sys:String x:Key="Delete">
+        删除
+    </sys:String>
+    <sys:String x:Key="Import">
+        导入
+    </sys:String>
+    <sys:String x:Key="Export">
+        导出
+    </sys:String>
+    <sys:String x:Key="Edit">
+        编辑
+    </sys:String>
 
     <!-- Quick Access -->
     <sys:String x:Key="QuickAccess">
@@ -70,6 +94,26 @@
     </sys:String>
     <sys:String x:Key="CleanedFolders">
         已清理文件夹
+    </sys:String>
+
+    <!-- Menu Filter -->
+    <sys:String x:Key="FilterSearchTooltip">
+        输入关键词
+    </sys:String>
+    <sys:String x:Key="TitleSelectAll">
+        全选
+    </sys:String>
+    <sys:String x:Key="TitleKeyword">
+        关键词
+    </sys:String>
+    <sys:String x:Key="TitleState">
+        状态
+    </sys:String>
+    <sys:String x:Key="TitleGroup">
+        组别
+    </sys:String>
+    <sys:String x:Key="TitleAction">
+        操作
     </sys:String>
 
     <!-- Menu Config -->
@@ -184,5 +228,39 @@
     </sys:String>
     <sys:String x:Key="LabelCleanMenuItems">
         菜单项
+    </sys:String>
+
+    <!-- Close Dialog -->
+    <sys:String x:Key="CloseDialogTitle">
+        关闭选项
+    </sys:String>
+    <sys:String x:Key="CloseOptionMinimize">
+        最小化至托盘
+    </sys:String>
+    <sys:String x:Key="CloseOptionExit">
+        退出程序
+    </sys:String>
+    <sys:String x:Key="CloseOptionRemember">
+        记住选择
+    </sys:String>
+
+    <!-- Filter Dialog -->
+    <sys:String x:Key="TitleAppendItem">
+        添加项目
+    </sys:String>
+    <sys:String x:Key="TitleEditItem">
+        编辑项目
+    </sys:String>
+    <sys:String x:Key="TitleImportItems">
+        选择导入项目
+    </sys:String>
+    <sys:String x:Key="TitleExportItems">
+        选择导出项目
+    </sys:String>
+    <sys:String x:Key="TitleCleanItems">
+        选择清理项目
+    </sys:String>
+    <sys:String x:Key="TitlePath">
+        路径
     </sys:String>
 </ResourceDictionary>

@@ -18,6 +18,30 @@
     <sys:String x:Key="Whitelist">
         Liste blanche
     </sys:String>
+    <sys:String x:Key="Confirm">
+        Confirmer
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        Annuler
+    </sys:String>
+    <sys:String x:Key="Search">
+        Recherche
+    </sys:String>
+    <sys:String x:Key="Append">
+        Ajouter
+    </sys:String>
+    <sys:String x:Key="Delete">
+        Supprimer
+    </sys:String>
+    <sys:String x:Key="Import">
+        Importer
+    </sys:String>
+    <sys:String x:Key="Export">
+        Exporter
+    </sys:String>
+    <sys:String x:Key="Edit">
+        Modifier
+    </sys:String>
 
     <!-- Quick Access -->
     <sys:String x:Key="QuickAccess">
@@ -70,6 +94,26 @@
     </sys:String>
     <sys:String x:Key="CleanedFolders">
         Dossiers nettoyés
+    </sys:String>
+
+    <!-- Menu Filter -->
+    <sys:String x:Key="FilterSearchTooltip">
+        Recherche avec un mot-clé
+    </sys:String>
+    <sys:String x:Key="TitleSelectAll">
+        Tout sélectionner
+    </sys:String>
+    <sys:String x:Key="TitleKeyword">
+        Mot-clé
+    </sys:String>
+    <sys:String x:Key="TitleState">
+        État
+    </sys:String>
+    <sys:String x:Key="TitleGroup">
+        Groupe
+    </sys:String>
+    <sys:String x:Key="TitleAction">
+        Action
     </sys:String>
 
     <!-- Menu Config -->
@@ -185,5 +229,39 @@
     <sys:String x:Key="LabelCleanMenuItems">
         Éléments de menu
     </sys:String>
-    
+
+    <!-- Close Dialog -->
+    <sys:String x:Key="CloseDialogTitle">
+        Option de clôture
+    </sys:String>
+    <sys:String x:Key="CloseOptionMinimize">
+        Minimiser en plateau
+    </sys:String>
+    <sys:String x:Key="CloseOptionExit">
+        Programme de sortie
+    </sys:String>
+    <sys:String x:Key="CloseOptionRemember">
+        N'oubliez pas l'option
+    </sys:String>
+
+    <!-- Filter Dialog -->
+    <sys:String x:Key="TitleAppendItem">
+        Élément annexé
+    </sys:String>
+    <sys:String x:Key="TitleEditItem">
+        Modifier l'article
+    </sys:String>
+    <sys:String x:Key="TitleImportItems">
+        Sélectionnez Importer des éléments
+    </sys:String>
+    <sys:String x:Key="TitleExportItems">
+        Sélectionnez des éléments d'exportation
+    </sys:String>
+    <sys:String x:Key="TitleCleanItems">
+        Sélectionnez des articles propres
+    </sys:String>
+    <sys:String x:Key="TitlePath">
+        Chemin
+    </sys:String>
+
 </ResourceDictionary>

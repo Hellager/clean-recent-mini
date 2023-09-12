@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -47,6 +48,9 @@ namespace clean_recent_mini
         FileSystemWatcher watcher = null;
         System.Threading.Timer watcherDebounceTimer = null;
         bool debounceWatcherValid = true;
+
+        // Filter
+        public ObservableCollection<FilterlistTableItem> FilterlistTableData = new ObservableCollection<FilterlistTableItem>();
 
         public MainWindow()
         {
@@ -364,6 +368,8 @@ namespace clean_recent_mini
         {
             Logger.Debug("Switch to filter menu");
 
+            this.Refresh_Filterlist_Table();
+
             this.ContainerController.SelectedIndex = 1;
         }
 
@@ -389,6 +395,175 @@ namespace clean_recent_mini
         private void Update_StatusMenu()
         {
             this.Update_QuickAccess_Status();
+        }
+
+        /************* About Filter Menu ******************/
+        private void Refresh_Filterlist_Table()
+        {
+            this.FilterlistTableData.Clear();
+
+            for (Int32 i = 0; i < this.cleanConfig.filter_list.Count; i++)
+            {
+                this.FilterlistTableData.Add(new FilterlistTableItem(this.cleanConfig.filter_list.ElementAt(i)));
+            }
+
+            this.FilterlistTable.DataContext = this.FilterlistTableData;
+
+            this.FilterlistTable.Items.Refresh();
+        }
+
+        private void On_Filter_CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var CurCheckBox = sender as System.Windows.Controls.CheckBox;
+            var CurCheckBoxUID = CurCheckBox.Uid;
+
+            if (CurCheckBoxUID == "-1")
+            {
+                foreach (var item in this.FilterlistTableData)
+                {
+                    item.IsSelected = true;
+                }
+
+                CurCheckBox.Uid = "-2";
+                return;
+            }
+            else if (CurCheckBoxUID == "-2")
+            {
+                foreach (var item in this.FilterlistTableData)
+                {
+                    item.IsSelected = false;
+                }
+
+                CurCheckBox.Uid = "-1";
+                return;
+            }
+
+            foreach (var item in this.FilterlistTableData)
+            {
+                if (item.Id == CurCheckBoxUID)
+                {
+                    item.IsSelected = !item.IsSelected;
+                    break;
+                }
+            }
+        }
+
+        private void On_Filter_SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.FilterInputText.Text == "")
+            {
+                this.Refresh_Filterlist_Table();
+            }
+            else
+            {
+                this.FilterlistTableData.Clear();
+
+                for (Int32 i = 0; i < this.cleanConfig.filter_list.Count; i++)
+                {
+                    if (this.cleanConfig.filter_list[i].keyword.Contains(this.FilterInputText.Text))
+                    {
+                        this.FilterlistTableData.Add(new FilterlistTableItem(this.cleanConfig.filter_list.ElementAt(i)));
+                    }
+                }
+
+                this.FilterlistTable.DataContext = this.FilterlistTableData;
+
+                this.FilterlistTable.Items.Refresh();
+            }
+        }
+
+        private void On_Filter_AppendButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilterDialog dialog = new FilterDialog();
+            dialog.SetDialogMode(0);
+            dialog.ShowDialog();
+
+            this.Refresh_Filterlist_Table();
+        }
+
+        private void On_Filter_DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> toDeleteID = new List<string>();
+
+            for (Int32 i = 0; i < this.FilterlistTableData.Count; i++)
+            {
+                if (this.FilterlistTableData[i].IsSelected)
+                {
+                    toDeleteID.Add(this.FilterlistTableData[i].Id);
+                }
+            }
+
+            for (int i = this.cleanConfig.filter_list.Count - 1; i >= 0; i--)
+            {
+                if (toDeleteID.Contains(this.cleanConfig.filter_list[i].id))
+                    this.cleanConfig.filter_list.RemoveAt(i);
+            }
+
+            this.Refresh_Filterlist_Table();
+        }
+
+        private void On_Filter_ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = false;
+            dialog.Title = "Please select file";
+            dialog.Filter = "JSON file(*.json)|*.json";
+
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string file = dialog.FileName;
+
+                Logger.Debug("Choose file: " + file);
+
+                try
+                {
+                    var import_content = System.IO.File.ReadAllText(file);
+                    var import_clean_config = JsonConvert.DeserializeObject<CleanConfig>(import_content);
+
+                    Logger.Debug("import clean config from " + file);
+
+                    FilterDialog tranferDialog = new FilterDialog();
+                    tranferDialog.SetDialogMode(2);
+                    tranferDialog.SetTransferData(import_clean_config.filter_list);
+                    tranferDialog.ShowDialog();
+                }
+                catch (Exception err)
+                {
+                    Logger.Debug("invalid config file: " + err.Message);
+
+                    return;
+                }
+            }
+        }
+
+        private void On_Filter_ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilterDialog tranferDialog = new FilterDialog();
+            tranferDialog.SetDialogMode(3);
+            tranferDialog.SetTransferData(this.cleanConfig.filter_list);
+            tranferDialog.ShowDialog();
+        }
+
+        private void On_Filter_EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilterlistTableItem edit_target = default;
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+            {
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+
+                    edit_target = row.Item as FilterlistTableItem;
+                    break;
+                }
+            }
+
+            if (edit_target == null) return;
+            FilterDialog dialog = new FilterDialog();
+            dialog.SetEditItemData(edit_target);
+            dialog.ShowDialog();
+
+            this.Refresh_Filterlist_Table();
         }
 
         /************* About Config Menu ******************/
