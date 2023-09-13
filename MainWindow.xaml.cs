@@ -52,6 +52,11 @@ namespace clean_recent_mini
         // Filter
         public ObservableCollection<FilterlistTableItem> FilterlistTableData = new ObservableCollection<FilterlistTableItem>();
 
+        // Close Dialog
+        public bool closeDialogOkOrCancel = false; // false for cancel, true for confirm
+        public bool closeRememberOption = false;
+        public byte closeOption = 0; // 0 for exit, 1 for minimize
+
         public MainWindow()
         {
             this.Build_NotifyIcon();
@@ -64,6 +69,84 @@ namespace clean_recent_mini
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Logger.Debug("Window Closing");
+
+            this.appConfig.close_trigger_count += 1;
+            if (this.appConfig.ask_close_option == true || 
+                this.appConfig.close_trigger_count >= this.appConfig.reask_close_count)
+            {
+                CloseDialog closeDialog = new CloseDialog();
+                closeDialog.ShowDialog();
+
+                if (this.closeDialogOkOrCancel == false)
+                {
+                    if (this.closeRememberOption == false)
+                    {
+                        this.appConfig.ask_close_option = true;
+                    }
+
+                    e.Cancel = true;
+                    return;
+                }
+
+                if (this.closeDialogOkOrCancel == true && this.closeRememberOption == true)
+                {
+                    // Handle close event with dialog result
+                    this.appConfig.ask_close_option = false;
+                    Logger.Debug("Remember choice, use new app config data to handle close event");
+                    if (this.appConfig.close_to_tray == false)
+                    {
+                        Logger.Debug("Quit program");
+                        this.Save_AppConfig();
+                        this.Save_CleanConfig();
+                        this.Save_CleanHistory();
+                        e.Cancel = false;
+                    }
+                    else
+                    {
+                        Logger.Debug("Minize mainwindow to system tray");
+                        e.Cancel = true;
+                        this.Hide();
+                    }
+                }
+                else if (this.closeDialogOkOrCancel == true && this.closeRememberOption == false)
+                {
+                    // Handle close event without remember
+                    this.appConfig.ask_close_option = true;
+                    Logger.Debug("No remember choice, use confirm res to handle close event");
+                    if (this.closeOption == 0)
+                    {
+                        Logger.Debug("Quit program");
+                        this.Save_AppConfig();
+                        this.Save_CleanConfig();
+                        this.Save_CleanHistory();
+                        e.Cancel = false;
+                    }
+                    else
+                    {
+                        Logger.Debug("Minize mainwindow to system tray");
+                        e.Cancel = true;
+                        this.Hide();
+                    }
+                }
+            }
+            else
+            {
+                // With default config
+                if (this.appConfig.close_to_tray == false)
+                {
+                    Logger.Debug("Quit program");
+                    this.Save_AppConfig();
+                    this.Save_CleanConfig();
+                    this.Save_CleanHistory();
+                    e.Cancel = false;
+                }
+                else
+                {
+                    Logger.Debug("Minize mainwindow to system tray");
+                    e.Cancel = true;
+                    this.Hide();
+                }
+            }
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)

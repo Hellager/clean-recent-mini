@@ -28,12 +28,27 @@ namespace clean_recent_mini
 
         private void On_ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
+            var mainWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is MainWindow) as MainWindow;
+            mainWindow.closeDialogOkOrCancel = true;
+            mainWindow.closeRememberOption = this.AskOption.IsChecked.Value;
 
+            if (this.AskOption.IsChecked == true) // Remember Option
+            {
+                // 不再询问则视为使用默认设置
+                mainWindow.appConfig.close_to_tray = this.MiniRadio.IsChecked.Value;
+            }
+
+            mainWindow.closeOption = (byte)(this.MiniRadio.IsChecked.Value ? 1 : 0);
+
+            this.Close();
         }
 
         private void On_CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            var mainWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is MainWindow) as MainWindow;
+            mainWindow.closeDialogOkOrCancel = false;
 
+            this.Close();
         }
     }
 }
