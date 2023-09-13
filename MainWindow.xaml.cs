@@ -1093,7 +1093,65 @@ namespace clean_recent_mini
                     this.quickAccessHandler.AddquickAccessCommandName(item);
                 }
             }
-            // this.quickAccessHandler.RemoveFromQuickAccess(clean_items);
+
+            var clean_time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            this.cleanHistory.run_time = clean_time;
+
+            var cleaned_files = new List<string>();
+            var cleaned_folders = new List<string>();
+            var failed_clean_files = new List<string>();
+            var failed_clean_floders = new List<string>();
+            var quick_access_snapshot = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
+            var recent_files = this.quickAccessHandler.GetRecentFiles().Keys.ToList();
+            var frequent_files = this.quickAccessHandler.GetFrequentFolders().Keys.ToList();
+            
+            this.quickAccessHandler.RemoveFromQuickAccess(cleanList);
+
+            for (int i = 0; i < cleanSource.Count; i++)
+            {
+                if (recent_files.Contains(cleanSource[i]))
+                {
+                    failed_clean_files.Add(cleanSource[i]);
+                }
+                else
+                {
+                    cleaned_files.Add(cleanSource[i]);
+                }
+
+                if (frequent_files.Contains(cleanSource[i]))
+                {
+                    failed_clean_floders.Add(cleanSource[i]);
+                }
+                else
+                {
+                    cleaned_folders.Add(cleanSource[i]);
+                }
+            }
+
+            // update snapshot
+            var cnt_limit = this.cleanHistory.clean_snapshots_max;
+
+            while (this.cleanHistory.clean_snapshots.Count > cnt_limit)
+            {
+                this.cleanHistory.clean_snapshots.RemoveAt(0);
+            }
+
+            this.cleanHistory.clean_snapshots.Add(new CleanedSnapshotItem()
+            {
+                cleaned_at = clean_time,
+                quick_access = quick_access_snapshot,
+                cleaned_files = cleaned_files,
+                cleaned_folders = cleaned_folders
+            });
+
+            this.cleanHistory.cleaned_data.Add(new CleanedHistoryItem()
+            {
+                cleaned_at = clean_time,
+                cleaned_files = cleaned_files,
+                cleaned_folders = cleaned_folders
+            });
+
+            this.Save_CleanHistory();
 
             Int32 failed_clean = 0;
             List<string> cur_quick_access = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
