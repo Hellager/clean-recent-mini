@@ -692,9 +692,33 @@ namespace clean_recent_mini
             this.ValueFrequentFolders.Text = this.quickAccessHandler.GetFrequentFoldersList().Count.ToString();
         }
 
+        private void Update_Filter_Status()
+        {
+            this.ValueInBlacklist.Text = this.Get_Cur_In_Blacklist().Count.ToString();
+            this.ValueInCleanlist.Text = this.Get_Cur_In_Cleanlist().Count.ToString() + " / " + this.Get_Cur_Quick_Access().Count.ToString();
+            this.ValueInWhitelist.Text = this.Get_Cur_In_Whitelist().Count.ToString();
+        }
+
+        private void Update_History_Status()
+        {
+            Int32 cleaned_times = 0, cleaned_files = 0, cleaned_folders = 0;
+            cleaned_times = this.cleanHistory.cleaned_data.Count;
+            foreach (CleanedHistoryItem history in this.cleanHistory.cleaned_data)
+            {
+                cleaned_files += history.cleaned_files.Count;
+                cleaned_folders += history.cleaned_folders.Count;
+            }
+
+            this.ValueCleanedFiles.Text = cleaned_files.ToString();
+            this.ValueCleanTimes.Text = cleaned_times.ToString();
+            this.ValueCleanedFolders.Text = cleaned_folders.ToString();
+        }
+
         private void Update_StatusMenu()
         {
             this.Update_QuickAccess_Status();
+            this.Update_Filter_Status();
+            this.Update_History_Status();
         }
 
         /************* About Filter Menu ******************/
