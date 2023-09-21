@@ -1020,83 +1020,104 @@ namespace clean_recent_mini
                 Logger.Debug("Stop interval timer");
             }
 
-            // Restart trigger
-            if (this.cleanConfig.clean_method == 0)
+            if (idx == 1)
             {
-                // Start timer;
-                if (this.cleanIntervalTimer != null)
+                // Restart trigger
+                if (this.cleanConfig.clean_method == 0)
                 {
-                    this.cleanIntervalTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                    this.cleanIntervalTimer = null;
-
-                    // this.interval_button.Content = "Start Interval";
-
-                    Logger.Debug("Stop interval timer");
-                }
-                else
-                {
-                    Int32 interval = 30;
-                    if (this.CleanIntervalSelector != null)
+                    // Start timer;
+                    if (this.cleanIntervalTimer != null)
                     {
-                        if (this.CleanIntervalSelector.SelectedIndex == 0)
-                        {
-                            interval = 1;
-                        }
-                        else if (this.CleanIntervalSelector.SelectedIndex == 1)
-                        {
-                            interval = 30;
-                        }
-                        else if (this.CleanIntervalSelector.SelectedIndex == 2)
-                        {
-                            interval = 60;
-                        }
+                        this.cleanIntervalTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                        this.cleanIntervalTimer = null;
+
+                        // this.interval_button.Content = "Start Interval";
+
+                        Logger.Debug("Stop interval timer");
                     }
+                    else
+                    {
+                        Int32 interval = 30;
+                        if (this.CleanIntervalSelector != null)
+                        {
+                            if (this.CleanIntervalSelector.SelectedIndex == 0)
+                            {
+                                interval = 1;
+                            }
+                            else if (this.CleanIntervalSelector.SelectedIndex == 1)
+                            {
+                                interval = 30;
+                            }
+                            else if (this.CleanIntervalSelector.SelectedIndex == 2)
+                            {
+                                interval = 60;
+                            }
+                        }
 
-                    this.cleanIntervalTimer = new System.Threading.Timer(new TimerCallback(On_IntervalTimer_Triggered), null, Timeout.Infinite, Timeout.Infinite);
-                    this.cleanIntervalTimer.Change(TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(interval)); // 第一项决定 timer 时间，第二项决定 timeout 后下一次 timer 时间,相同时则为固定时间间隔触发
+                        this.cleanIntervalTimer = new System.Threading.Timer(new TimerCallback(On_IntervalTimer_Triggered), null, Timeout.Infinite, Timeout.Infinite);
+                        this.cleanIntervalTimer.Change(TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(interval)); // 第一项决定 timer 时间，第二项决定 timeout 后下一次 timer 时间,相同时则为固定时间间隔触发
 
-                    // this.interval_button.Content = "Stop Interval";
-                    DateTime next_runtime = DateTime.Now.AddMinutes(interval);
+                        // this.interval_button.Content = "Stop Interval";
+                        DateTime next_runtime = DateTime.Now.AddMinutes(interval);
 
-                    Logger.Debug(string.Format("Start interval timer, every {0} minutes, next runtime: {1}", interval, next_runtime.ToString()));
+                        Logger.Debug(string.Format("Start interval timer, every {0} minutes, next runtime: {1}", interval, next_runtime.ToString()));
+
+                        if (this.LabelCleanInterval != null)
+                        {
+                            this.LabelCleanInterval.ToolTip = next_runtime.ToString();
+                        }
+
+                    }
+                }
+                else if (this.cleanConfig.clean_method == 1)
+                {
+                    // Start watcher;
+                    this.debounceWatcherValid = true;
+
+                    this.watcher = new FileSystemWatcher();
+                    // https://learn.microsoft.com/en-us/dotnet/api/system.environment.getfolderpath?view=net-7.0
+                    watcher.Path = Environment.GetFolderPath(Environment.SpecialFolder.Recent);
+                    watcher.NotifyFilter = NotifyFilters.LastWrite; // 仅当向快速访问中添加新项时出现
+                    watcher.Filter = "*.*";
+                    watcher.Changed += On_Recent_QuickAccess_Changed;
+                    watcher.EnableRaisingEvents = true;
+
+                    Logger.Debug("Watcher starts watching path: " + watcher.Path);
 
                     if (this.LabelCleanInterval != null)
                     {
-                        this.LabelCleanInterval.ToolTip = next_runtime.ToString();
+                        this.LabelCleanInterval.ToolTip = "Last runtime";
                     }
-
                 }
             }
-            else if (this.cleanConfig.clean_method == 1)
-            {
-                // Start watcher;
-                this.debounceWatcherValid = true;
 
-                this.watcher = new FileSystemWatcher();
-                // https://learn.microsoft.com/en-us/dotnet/api/system.environment.getfolderpath?view=net-7.0
-                watcher.Path = Environment.GetFolderPath(Environment.SpecialFolder.Recent);
-                watcher.NotifyFilter = NotifyFilters.LastWrite; // 仅当向快速访问中添加新项时出现
-                watcher.Filter = "*.*";
-                watcher.Changed += On_Recent_QuickAccess_Changed;
-                watcher.EnableRaisingEvents = true;
-
-                Logger.Debug("Watcher starts watching path: " + watcher.Path);
-
-                if (this.LabelCleanInterval != null)
-                {
-                    this.LabelCleanInterval.ToolTip = "Last runtime";
-                }
-            }
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                if (this.CommandNames != null)
+                if (this.MenuNames != null)
                 {
+                    if (idx < 2)
+                    {
+                        this.CleanMethodSelector.IsEnabled = !Convert.ToBoolean(idx);
+                        this.CleanIntervalSelector.IsEnabled = !Convert.ToBoolean(idx);
+                        this.CleanPolicySelector.IsEnabled = !Convert.ToBoolean(idx);
+                        this.CleanCategorySelector.IsEnabled = !Convert.ToBoolean(idx);
+                        this.MenuNames.IsEnabled = !Convert.ToBoolean(idx);
+                    }
+                    else if (idx == 2)
+                    {
+                        this.CleanMethodSelector.IsEnabled = !Convert.ToBoolean(idx);
+                        this.CleanIntervalSelector.IsEnabled = !Convert.ToBoolean(idx);
+                        this.CleanPolicySelector.IsEnabled = true;
+                        this.CleanCategorySelector.IsEnabled = true;
+                        this.MenuNames.IsEnabled = true;
+                    }
+
                     this.CleanMethodSelector.IsEnabled = !Convert.ToBoolean(idx);
                     this.CleanIntervalSelector.IsEnabled = !Convert.ToBoolean(idx);
                     this.CleanPolicySelector.IsEnabled = !Convert.ToBoolean(idx);
                     this.CleanCategorySelector.IsEnabled = !Convert.ToBoolean(idx);
-                    this.CommandNames.IsEnabled = !Convert.ToBoolean(idx);
+                    this.MenuNames.IsEnabled = !Convert.ToBoolean(idx);
                 }
             }));
         }

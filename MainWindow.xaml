@@ -364,7 +364,7 @@
                                 </ComboBox>
 
                                 <Label x:Name="LabelCommandNames" Content="{DynamicResource LabelCleanMenuItems}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-                                <TextBox x:Name="CommandNames" Grid.Row="2" Grid.Column="3" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                <TextBox x:Name="MenuNames" Grid.Row="2" Grid.Column="3" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             </Grid>
                         </GroupBox>
                     </Grid>
