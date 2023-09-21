@@ -1342,30 +1342,38 @@ namespace clean_recent_mini
             var cleaned_folders = new List<string>();
             var failed_clean_files = new List<string>();
             var failed_clean_floders = new List<string>();
-            var quick_access_snapshot = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
-            var recent_files = this.quickAccessHandler.GetRecentFilesList();
-            var frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
+            var quick_access_snapshot = this.quickAccessHandler.GetQuickAccessList();
+            var before_recent_files = this.quickAccessHandler.GetRecentFilesList();
+            var before_frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
             
             this.quickAccessHandler.RemoveFromQuickAccess(cleanList);
 
-            for (int i = 0; i < cleanSource.Count; i++)
-            {
-                if (recent_files.Contains(cleanSource[i]))
-                {
-                    failed_clean_files.Add(cleanSource[i]);
-                }
-                else
-                {
-                    cleaned_files.Add(cleanSource[i]);
-                }
+            var after_recent_files = this.quickAccessHandler.GetRecentFilesList();
+            var after_frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
 
-                if (frequent_folders.Contains(cleanSource[i]))
+            for (int i = 0; i < cleanList.Count; i++)
+            {
+                if (before_recent_files.Contains(cleanList[i]))
                 {
-                    failed_clean_floders.Add(cleanSource[i]);
+                    if (!after_recent_files.Contains(cleanList[i]))
+                    {
+                        cleaned_files.Add(cleanList[i]);
+                    }
+                    else
+                    {
+                        failed_clean_files.Add(cleanList[i]);
+                    }
                 }
-                else
+                else if (before_frequent_folders.Contains(cleanList[i]))
                 {
-                    cleaned_folders.Add(cleanSource[i]);
+                    if (!after_frequent_folders.Contains(cleanList[i]))
+                    {
+                        cleaned_folders.Add(cleanList[i]);
+                    }
+                    else
+                    {
+                        failed_clean_floders.Add(cleanList[i]);
+                    }
                 }
             }
 
