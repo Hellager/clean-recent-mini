@@ -244,6 +244,17 @@
         記住選擇
     </sys:String>
 
+    <!-- Status Dialog -->
+    <sys:String x:Key="Name">
+        名稱
+    </sys:String>
+    <sys:String x:Key="Path">
+        路徑
+    </sys:String>
+    <sys:String x:Key="Time">
+        時間
+    </sys:String>
+
     <!-- Filter Dialog -->
     <sys:String x:Key="TitleAppendItem">
         添加項目

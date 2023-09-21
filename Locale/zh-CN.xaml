@@ -244,6 +244,17 @@
         记住选择
     </sys:String>
 
+    <!-- Status Dialog -->
+    <sys:String x:Key="Name">
+        名称
+    </sys:String>
+    <sys:String x:Key="Path">
+        路径
+    </sys:String>
+    <sys:String x:Key="Time">
+        时间
+    </sys:String>
+
     <!-- Filter Dialog -->
     <sys:String x:Key="TitleAppendItem">
         添加项目

@@ -149,6 +149,12 @@ namespace clean_recent_mini
             }
         }
 
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            Logger.Debug("window get activated");
+            this.Update_StatusMenu();
+        }
+
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             Logger.Debug("Window rendered content");
@@ -464,15 +470,226 @@ namespace clean_recent_mini
         }
 
         /************* About Status Menu ******************/
+        private Dictionary<string, string> Get_Cur_Recent_Files()
+        {
+            return this.quickAccessHandler.GetRecentFilesDict();
+        }
+
+        private Dictionary<string, string> Get_Cur_Frequent_Folders()
+        {
+            return this.quickAccessHandler.GetFrequentFoldersDict();
+        }
+
+        private Dictionary<string, string> Get_Cur_Quick_Access()
+        {
+            return this.quickAccessHandler.GetQuickAccessDict();
+        }
+
+        private Dictionary<string, string> Get_Cur_In_Blacklist()
+        {
+            Dictionary<string, string> InBlacklist = new Dictionary<string, string>();
+
+            Dictionary<string, string> clean_source = new Dictionary<string, string>();
+            if (this.cleanConfig.clean_category == 1)
+            {
+                clean_source = this.Get_Cur_Frequent_Folders();
+            }
+            else if (this.cleanConfig.clean_category == 2)
+            {
+                clean_source = this.Get_Cur_Recent_Files();
+            }
+            else
+            {
+                clean_source = this.Get_Cur_Recent_Files();
+            }
+
+            foreach (var item in clean_source)
+            {
+                for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
+                {
+                    if (item.Key.Contains(this.cleanConfig.filter_list[j].keyword))
+                    {
+                        if (this.cleanConfig.filter_list[j].group == 0 &&
+                            this.cleanConfig.filter_list[j].state == true)
+                        {
+                            InBlacklist.Add(item.Key, item.Value);
+                        }
+                    }
+                }
+            }
+
+            return InBlacklist;
+        }
+
+        private Dictionary<string, string> Get_Cur_In_Whitelist()
+        {
+            Dictionary<string, string> InWhitelist = new Dictionary<string, string>();
+
+            Dictionary<string, string> clean_source = new Dictionary<string, string>();
+            if (this.cleanConfig.clean_category == 1)
+            {
+                clean_source = this.Get_Cur_Frequent_Folders();
+            }
+            else if (this.cleanConfig.clean_category == 2)
+            {
+                clean_source = this.Get_Cur_Recent_Files();
+            }
+            else
+            {
+                clean_source = this.Get_Cur_Recent_Files();
+            }
+
+            foreach (var item in clean_source)
+            {
+                for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
+                {
+                    if (item.Key.Contains(this.cleanConfig.filter_list[j].keyword))
+                    {
+                        if (this.cleanConfig.filter_list[j].group == 1 &&
+                            this.cleanConfig.filter_list[j].state == true)
+                        {
+                            InWhitelist.Add(item.Key, item.Value);
+                        }
+                    }
+                }
+            }
+
+            return InWhitelist;
+        }
+
+        private Dictionary<string, string> Get_Cur_In_Cleanlist()
+        {
+            Dictionary<string, string> InCleanlist = new Dictionary<string, string>();
+
+            Dictionary<string, string> clean_source = new Dictionary<string, string>();
+            if (this.cleanConfig.clean_category == 1)
+            {
+                clean_source = this.Get_Cur_Frequent_Folders();
+            }
+            else if (this.cleanConfig.clean_category == 2)
+            {
+                clean_source = this.Get_Cur_Recent_Files();
+            }
+            else
+            {
+                clean_source = this.Get_Cur_Recent_Files();
+            }
+
+            if (this.cleanConfig.clean_policy == 2)
+            {
+                InCleanlist = clean_source;
+            }
+            else
+            {
+                foreach (var item in clean_source)
+                {
+                    for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
+                    {
+                        if (item.Key.Contains(this.cleanConfig.filter_list[j].keyword))
+                        {
+                            if (this.cleanConfig.filter_list[j].group == this.cleanConfig.clean_policy &&
+                                this.cleanConfig.filter_list[j].state == true)
+                            {
+                                InCleanlist.Add(item.Key, item.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return InCleanlist;
+        }
+
+        private void Show_Recent_Files(object sender, EventArgs e)
+        {
+            var res = this.Get_Cur_Recent_Files();
+
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(0);
+            dialog.SetShowNoramlData(res);
+            dialog.Show();
+        }
+
+        private void Show_Frequent_Folders(object sender, EventArgs e)
+        {
+            var res = this.Get_Cur_Frequent_Folders();
+
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(2);
+            dialog.SetShowNoramlData(res);
+            dialog.Show();
+        }
+
+        private void Show_Quick_Access(object sender, EventArgs e)
+        {
+            var res = this.Get_Cur_Quick_Access();
+
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(1);
+            dialog.SetShowNoramlData(res);
+            dialog.Show();
+        }
+
+        private void Show_In_Blacklist(object sender, EventArgs e)
+        {
+            var res = this.Get_Cur_In_Blacklist();
+
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(3);
+            dialog.SetShowNoramlData(res);
+            dialog.Show();
+        }
+
+        private void Show_In_Cleanlist(object sender, EventArgs e)
+        {
+            var res = this.Get_Cur_In_Cleanlist();
+
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(4);
+            dialog.SetShowNoramlData(res);
+            dialog.Show();
+        }
+
+        private void Show_In_Whitelist(object sender, EventArgs e)
+        {
+            var res = this.Get_Cur_In_Whitelist();
+
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(5);
+            dialog.SetShowNoramlData(res);
+            dialog.Show();
+        }
+
+        private void Show_Cleaned_Files(object sender, EventArgs e)
+        {
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(6);
+            dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
+            dialog.Show();
+        }
+
+        private void Show_Clean_Times(object sender, EventArgs e)
+        {
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(7);
+            dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
+            dialog.Show();
+        }
+
+        private void Show_Cleaned_Folders(object sender, EventArgs e)
+        {
+            StatusDialog dialog = new StatusDialog();
+            dialog.SetShowMode(8);
+            dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
+            dialog.Show();
+        }
+
         private void Update_QuickAccess_Status()
         {
-            Dictionary<string, string> quick_access = this.quickAccessHandler.GetQuickAccessDict();
-            Dictionary<string, string> frequent_folders = this.quickAccessHandler.GetFrequentFolders();
-            Dictionary<string, string> recent_files = this.quickAccessHandler.GetRecentFiles();
-
-            this.ValueRecentFiles.Text = recent_files.Count.ToString();
-            this.ValueQuickAccess.Text = quick_access.Count.ToString();
-            this.ValueFrequentFolders.Text = frequent_folders.Count.ToString();
+            this.ValueRecentFiles.Text = this.quickAccessHandler.GetRecentFilesList().Count.ToString();
+            this.ValueQuickAccess.Text = this.quickAccessHandler.GetQuickAccessList().Count.ToString();
+            this.ValueFrequentFolders.Text = this.quickAccessHandler.GetFrequentFoldersList().Count.ToString();
         }
 
         private void Update_StatusMenu()
@@ -986,15 +1203,15 @@ namespace clean_recent_mini
             List<string> clean_source = new List<string>();
             if (this.cleanConfig.clean_category == 1)
             {
-                clean_source = this.quickAccessHandler.GetFrequentFolders().Keys.ToList();
+                clean_source = this.quickAccessHandler.GetFrequentFoldersList();
             }
             else if (this.cleanConfig.clean_category == 2)
             {
-                clean_source = this.quickAccessHandler.GetRecentFiles().Keys.ToList();
+                clean_source = this.quickAccessHandler.GetRecentFilesList();
             }
             else
             {
-                clean_source = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
+                clean_source = this.quickAccessHandler.GetQuickAccessList();
             }
 
             // policy
@@ -1045,15 +1262,15 @@ namespace clean_recent_mini
             List<string> cleanSource = new List<string>();
             if (this.cleanConfig.clean_category == 1)
             {
-                cleanSource = this.quickAccessHandler.GetFrequentFolders().Keys.ToList();
+                cleanSource = this.quickAccessHandler.GetFrequentFoldersList();
             }
             else if (this.cleanConfig.clean_category == 2)
             {
-                cleanSource = this.quickAccessHandler.GetRecentFiles().Keys.ToList();
+                cleanSource = this.quickAccessHandler.GetRecentFilesList();
             }
             else
             {
-                cleanSource = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
+                cleanSource = this.quickAccessHandler.GetQuickAccessList();
             }
 
             // policy
@@ -1090,7 +1307,7 @@ namespace clean_recent_mini
                 Logger.Debug("Add system command names");
                 foreach (string item in this.cleanConfig.command_names)
                 {
-                    this.quickAccessHandler.AddquickAccessCommandName(item);
+                    this.quickAccessHandler.AddQuickAccessMenuName(item);
                 }
             }
 
@@ -1102,8 +1319,8 @@ namespace clean_recent_mini
             var failed_clean_files = new List<string>();
             var failed_clean_floders = new List<string>();
             var quick_access_snapshot = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
-            var recent_files = this.quickAccessHandler.GetRecentFiles().Keys.ToList();
-            var frequent_files = this.quickAccessHandler.GetFrequentFolders().Keys.ToList();
+            var recent_files = this.quickAccessHandler.GetRecentFilesList();
+            var frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
             
             this.quickAccessHandler.RemoveFromQuickAccess(cleanList);
 
@@ -1118,7 +1335,7 @@ namespace clean_recent_mini
                     cleaned_files.Add(cleanSource[i]);
                 }
 
-                if (frequent_files.Contains(cleanSource[i]))
+                if (frequent_folders.Contains(cleanSource[i]))
                 {
                     failed_clean_floders.Add(cleanSource[i]);
                 }

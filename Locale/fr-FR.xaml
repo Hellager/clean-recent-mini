@@ -244,6 +244,17 @@
         N'oubliez pas l'option
     </sys:String>
 
+    <!-- Status Dialog -->
+    <sys:String x:Key="Name">
+        Nom
+    </sys:String>
+    <sys:String x:Key="Path">
+        Chemin
+    </sys:String>
+    <sys:String x:Key="Time">
+        Temps
+    </sys:String>
+
     <!-- Filter Dialog -->
     <sys:String x:Key="TitleAppendItem">
         Élément annexé

@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:clean_recent_mini"
         mc:Ignorable="d"
         Closing="Window_Closing"
+        Activated="Window_Activated"
         ContentRendered="Window_ContentRendered" 
         Style="{StaticResource CustomWindowStyle}"
         Title="{DynamicResource AppName}" Height="360" Width="580" MinHeight="360" MinWidth="500" WindowStartupLocation="CenterScreen">
@@ -41,74 +42,92 @@
 
                         <Border Grid.Row="0" Grid.Column="0"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,-2,0,0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelRecentFiles" Text="{DynamicResource RecentFiles}"/>
-                                <TextBlock x:Name="ValueRecentFiles" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_Recent_Files">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelRecentFiles" Text="{DynamicResource RecentFiles}"/>
+                                    <TextBlock x:Name="ValueRecentFiles" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="1"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,-2,0,0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelQuickAccess" Text="{DynamicResource QuickAccess}"/>
-                                <TextBlock x:Name="ValueQuickAccess" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_Quick_Access">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelQuickAccess" Text="{DynamicResource QuickAccess}"/>
+                                    <TextBlock x:Name="ValueQuickAccess" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="0" Grid.Column="2"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0,-2, -2, 0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelFrequentFolders" Text="{DynamicResource FrequentFolders}"/>
-                                <TextBlock x:Name="ValueFrequentFolders" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_Frequent_Folders">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelFrequentFolders" Text="{DynamicResource FrequentFolders}"/>
+                                    <TextBlock x:Name="ValueFrequentFolders" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="1" Grid.Column="0"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelInBlacklist" Text="{DynamicResource InBlacklist}"/>
-                                <TextBlock x:Name="ValueInBlacklist" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_In_Blacklist">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelInBlacklist" Text="{DynamicResource InBlacklist}"/>
+                                    <TextBlock x:Name="ValueInBlacklist" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="1" Grid.Column="1"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelInCleanlist" Text="{DynamicResource InCleanlist}"/>
-                                <TextBlock x:Name="ValueInCleanlist" Text="0 / 20" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_In_Cleanlist">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelInCleanlist" Text="{DynamicResource InCleanlist}"/>
+                                    <TextBlock x:Name="ValueInCleanlist" Text="0 / 20" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="1" Grid.Column="2"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0, 0, 0, 0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelInWhitelist" Text="{DynamicResource InWhitelist}"/>
-                                <TextBlock x:Name="ValueInWhitelist" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_In_Whitelist">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelInWhitelist" Text="{DynamicResource InWhitelist}"/>
+                                    <TextBlock x:Name="ValueInWhitelist" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="2" Grid.Column="0"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,-1">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelCleanedFiles" Text="{DynamicResource CleandFiles}"/>
-                                <TextBlock x:Name="ValueCleanedFiles" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_Cleaned_Files">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelCleanedFiles" Text="{DynamicResource CleandFiles}"/>
+                                    <TextBlock x:Name="ValueCleanedFiles" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="2" Grid.Column="1"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,-1">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelCleanTimes" Text="{DynamicResource CleanTimes}"/>
-                                <TextBlock x:Name="ValueCleanTimes" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_Clean_Times">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelCleanTimes" Text="{DynamicResource CleanTimes}"/>
+                                    <TextBlock x:Name="ValueCleanTimes" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border Grid.Row="2" Grid.Column="2"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0, 0, 0, -1">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock x:Name="LabelCleanedFolders" Text="{DynamicResource CleanedFolders}"/>
-                                <TextBlock x:Name="ValueCleanedFolders" Text="0" HorizontalAlignment="Center"/>
-                            </StackPanel>
+                            <Button Click="Show_Cleaned_Folders">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock x:Name="LabelCleanedFolders" Text="{DynamicResource CleanedFolders}"/>
+                                    <TextBlock x:Name="ValueCleanedFolders" Text="0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Button x:Name="ManualCleanButtonLight" Visibility="Collapsed" Background="Transparent" ToolTip="Clean" BorderThickness="0" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,10" Click="On_ManualClean_Button_Clicked">

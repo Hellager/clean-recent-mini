@@ -273,6 +273,24 @@ namespace clean_recent_mini
         }
     }
 
+    public class StatusTableItem
+    {
+        public string Name { get; set; }
+        public string Path { get; set; }
+    }
+
+    public class StatusTableCleanedItem
+    {
+        public string Path { get; set; }
+        public string Time { get; set; }
+    }
+
+    public class StatusTableCleanedTimesItem
+    {
+        public string Files { get; set; }
+        public string Folders { get; set; }
+        public string Time { get; set; }
+    }
     internal class DataStruct
     {
     }

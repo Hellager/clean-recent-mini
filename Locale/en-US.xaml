@@ -244,6 +244,17 @@
         Remember option
     </sys:String>
 
+    <!-- Status Dialog -->
+    <sys:String x:Key="Name">
+        Name
+    </sys:String>
+    <sys:String x:Key="Path">
+        Path
+    </sys:String>
+    <sys:String x:Key="Time">
+        Time
+    </sys:String>
+
     <!-- Filter Dialog -->
     <sys:String x:Key="TitleAppendItem">
         Append Item

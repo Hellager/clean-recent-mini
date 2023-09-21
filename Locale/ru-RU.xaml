@@ -245,6 +245,17 @@
         Помните вариант
     </sys:String>
 
+    <!-- Status Dialog -->
+    <sys:String x:Key="Name">
+        Имя
+    </sys:String>
+    <sys:String x:Key="Path">
+        Путь
+    </sys:String>
+    <sys:String x:Key="Time">
+        Время
+    </sys:String>
+
     <!-- Filter Dialog -->
     <sys:String x:Key="TitleAppendItem">
         Добавить элемент
