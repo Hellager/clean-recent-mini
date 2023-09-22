@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 
-namespace clean_recent_mini
+namespace CleanRecentMini
 {
     public struct CleanFilterItemLabel
     {

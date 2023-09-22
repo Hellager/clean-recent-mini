@@ -17,7 +17,7 @@ using NanoidDotNet;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 
-namespace clean_recent_mini
+namespace CleanRecentMini
 {
     enum FilterlistDialogMode
     {

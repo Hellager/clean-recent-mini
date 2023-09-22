@@ -21,7 +21,7 @@ using FramePFX.Themes;
 using Newtonsoft.Json;
 using QuickAccess;
 
-namespace clean_recent_mini
+namespace CleanRecentMini
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using NLog;
 
-namespace clean_recent_mini
+namespace CleanRecentMini
 {
     /// <summary>
     /// CloseDialog.xaml 的交互逻辑
