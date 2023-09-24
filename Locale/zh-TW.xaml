@@ -286,5 +286,8 @@
     <sys:String x:Key="TitleKeywords">
         關鍵詞
     </sys:String>
-    
+    <sys:String x:Key="HintRepeatKeywords">
+        相關關鍵詞已存在
+    </sys:String>
+
 </ResourceDictionary>

@@ -220,9 +220,16 @@ namespace CleanRecentMini
                                     appendItem.id = Nanoid.Generate(size: 8);
                                 }
 
-                                if (mainWindow.cleanConfig.filter_list[i].keyword == appendItem.keyword)
+                                if (mainWindow.cleanConfig.filter_list[i].keyword == appendItem.keyword ||
+                                    appendItem.keyword.Contains(mainWindow.cleanConfig.filter_list[i].keyword))
                                 {
                                     Logger.Debug("Repeat keyword");
+
+                                    ResourceDictionary _resourceDictionary;
+                                    _resourceDictionary = System.Windows.Application.Current.Resources.MergedDictionaries[3];
+                                    string hint = _resourceDictionary.Contains("HintRepeatKeywords") ? _resourceDictionary["HintRepeatKeywords"].ToString() : "Releated keyword already exist";
+
+                                    this.Title = this.Title + " -- " + hint + "!";
                                     return;
                                 }
                             }
@@ -389,6 +396,10 @@ namespace CleanRecentMini
                     }
                     break;
             }
+
+            ResourceDictionary resourceDictionary;
+            resourceDictionary = System.Windows.Application.Current.Resources.MergedDictionaries[3];
+            this.Title = resourceDictionary.Contains(dialogTitle[Convert.ToInt32(this.dialogmode)]) ? resourceDictionary[dialogTitle[Convert.ToInt32(this.dialogmode)]].ToString() : dialogTitle[Convert.ToInt32(this.dialogmode)];
 
             this.Close();
 

@@ -286,5 +286,8 @@
     <sys:String x:Key="TitleKeywords">
         mots clés
     </sys:String>
+    <sys:String x:Key="HintRepeatKeywords">
+        Des mots clés connexes existent déjà
+    </sys:String>
 
 </ResourceDictionary>
