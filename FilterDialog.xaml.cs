@@ -44,11 +44,11 @@ namespace CleanRecentMini
         private FilterlistTableItem filterItem;
         
         // About import/export items
-        private List<CleanFilterItem> transferList;
+        private List<CleanFilterItem> transferList = new List<CleanFilterItem>();
         public ObservableCollection<FilterlistTableItem> transferTableData = new ObservableCollection<FilterlistTableItem>();
 
         // About clean items;
-        private List<string> cleanList;
+        private List<string> cleanList = new List<string>();
         public ObservableCollection<CleanTableItem> cleanTableData = new ObservableCollection<CleanTableItem>();
 
         public FilterDialog()

@@ -126,7 +126,7 @@
             </Grid.ColumnDefinitions>
 
             <Button x:Name="ConfirmButton" Content="{DynamicResource Confirm}" Grid.Column="0" Click="On_ConfirmButton_Click"/>
-            <Button x:Name="CancelButton" Content="{DynamicResource Cancel}" Grid.Column="1" Click="On_ConfirmButton_Click"/>
+            <Button x:Name="CancelButton" Content="{DynamicResource Cancel}" Grid.Column="1" Click="On_CancelButton_Click"/>
         </Grid>
     </Grid>
 </Window>
