@@ -35,7 +35,7 @@ namespace CleanRecentMini
             if (this.AskOption.IsChecked == true) // Remember Option
             {
                 // 不再询问则视为使用默认设置
-                mainWindow.appConfig.close_to_tray = this.MiniRadio.IsChecked.Value;
+                mainWindow.appConfig.close_option = this.MiniRadio.IsChecked.Value;
             }
 
             mainWindow.closeOption = (byte)(this.MiniRadio.IsChecked.Value ? 1 : 0);

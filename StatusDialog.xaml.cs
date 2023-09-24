@@ -72,9 +72,9 @@ namespace CleanRecentMini
                 {
                     table_data.Add(new StatusTableFilterItem()
                     {
-                        Name = item.Name,
-                        Path = item.Path,
-                        Keywords = String.Join(", ", item.Keywords.ToArray())
+                        Name = item.name,
+                        Path = item.path,
+                        Keywords = String.Join(", ", item.keywords.ToArray())
                     });
                 }
 
@@ -82,18 +82,59 @@ namespace CleanRecentMini
             }
         }
 
-        public void SetShowCleanedData(List<CleanedHistoryItem> data)
+        public void SetShowCleanedData(List<CleanQuickAccessItem> data)
         {
+            // <time, <type, path>>
+            Dictionary<Int64, Dictionary<string, List<string>>> cleaned_data = new Dictionary<Int64, Dictionary<string, List<string>>>();
+
+            foreach(CleanQuickAccessItem item in data)
+            {
+                if (item.type == 1)
+                {
+                    if (!cleaned_data.ContainsKey(item.cleaned_at))
+                    {
+                        Dictionary<string, List<string>> foldersHistory = new Dictionary<string, List<string>>();
+                        foldersHistory.Add("Folders", new List<string>() { item.path });
+                    }
+                    else
+                    {
+                        Dictionary<string, List<string>> curHistoryList = cleaned_data[item.cleaned_at];
+                        List<string> curFolderList = curHistoryList["Folders"];
+                        curFolderList.Add(item.path);
+                        curHistoryList["Folders"] = curFolderList;
+                        cleaned_data[item.cleaned_at] = curHistoryList;
+                    }
+                }
+                else if (item.type == 2)
+                {
+                    if (!cleaned_data.ContainsKey(item.cleaned_at))
+                    {
+                        Dictionary<string, List<string>> fileHistory = new Dictionary<string, List<string>>();
+                        fileHistory.Add("Files", new List<string>() { item.path });
+                    }
+                    else
+                    {
+                        Dictionary<string, List<string>> curHistoryList = cleaned_data[item.cleaned_at];
+                        List<string> curFileList = curHistoryList["Files"];
+                        curFileList.Add(item.path);
+                        curHistoryList["Files"] = curFileList;
+                        cleaned_data[item.cleaned_at] = curHistoryList;
+                    }
+                }
+            }
+
             if (this.StatusController.SelectedIndex == 2)
             {
                 List<StatusTableCleanedItem> table_data = new List<StatusTableCleanedItem>();
-                foreach (var item in data)
+                foreach (var item in cleaned_data)
                 {
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                    dateTime = dateTime.AddSeconds(item.cleaned_at).ToLocalTime();
+                    dateTime = dateTime.AddSeconds(item.Key).ToLocalTime();
+
+                    Dictionary<string, List<string>> historyData = item.Value;
                     if (this.mode == 6)
                     {
-                        var res = item.cleaned_files;
+                        var res = historyData["Files"];
                         foreach (var file in res)
                         {
                             table_data.Add(new StatusTableCleanedItem() { Path = file, Time = dateTime.ToString("yyyy/MM/dd HH:mm:ss") });
@@ -102,7 +143,7 @@ namespace CleanRecentMini
                     }
                     else if (this.mode == 8)
                     {
-                        var res = item.cleaned_folders;
+                        var res = historyData["Folders"];
                         foreach (var folder in res)
                         {
                             table_data.Add(new StatusTableCleanedItem() { Path = folder, Time = dateTime.ToString("yyyy/MM/dd HH:mm:ss") });
@@ -113,15 +154,16 @@ namespace CleanRecentMini
 
                 this.CleanedGird.ItemsSource = table_data;
             }
-            else if (this.StatusController.SelectedIndex == 2)
+            else if (this.StatusController.SelectedIndex == 3)
             {
                 List<StatusTableCleanedTimesItem> table_data = new List<StatusTableCleanedTimesItem>();
-                foreach (var item in data)
+                foreach (var item in cleaned_data)
                 {
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                    dateTime = dateTime.AddSeconds(item.cleaned_at).ToLocalTime();
+                    dateTime = dateTime.AddSeconds(item.Key).ToLocalTime();
 
-                    table_data.Add(new StatusTableCleanedTimesItem() { Files = item.cleaned_files.Count.ToString(), Folders = item.cleaned_folders.Count.ToString(), Time = dateTime.ToString("yyyy/MM/dd HH:mm:ss") });
+                    Dictionary<string, List<string>> historyData = item.Value;
+                    table_data.Add(new StatusTableCleanedTimesItem() { Files = historyData["Files"].Count.ToString(), Folders = historyData["Folders"].Count.ToString(), Time = dateTime.ToString("yyyy/MM/dd HH:mm:ss") });
 
                 }
 

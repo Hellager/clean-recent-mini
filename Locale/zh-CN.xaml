@@ -158,10 +158,13 @@
     <sys:String x:Key="LabelCloseOption">
         关闭
     </sys:String>
-    <sys:String x:Key="CloseOptionHide">
+    <sys:String x:Key="ConfigCloseOptionHide">
         隐藏
     </sys:String>
-    <sys:String x:Key="CloseOptionQuit">
+    <sys:String x:Key="ConfigCloseOptionMinimize">
+        最小化
+    </sys:String>
+    <sys:String x:Key="ConfigCloseOptionExit">
         退出
     </sys:String>
     <sys:String x:Key="LabelSystem">
@@ -170,7 +173,7 @@
     <sys:String x:Key="SystemSupport">
         默认支持
     </sys:String>
-    <sys:String x:Key="SystemRequireMenuItems">
+    <sys:String x:Key="SystemRequireMenuNames">
         需设置菜单项
     </sys:String>
     <sys:String x:Key="LabelVersion">
@@ -195,6 +198,9 @@
     </sys:String>
     <sys:String x:Key="TriggerPeriod">
         定期
+    </sys:String>
+    <sys:String x:Key="TriggerTimer">
+        定时
     </sys:String>
     <sys:String x:Key="TriggerMonitor">
         监控
@@ -226,7 +232,7 @@
     <sys:String x:Key="IntervalAnHour">
         1小时
     </sys:String>
-    <sys:String x:Key="LabelCleanMenuItems">
+    <sys:String x:Key="LabelCleanMenuNames">
         菜单项
     </sys:String>
 

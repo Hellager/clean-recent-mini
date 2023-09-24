@@ -302,8 +302,8 @@
 
                                 <Label x:Name="MenuConfigAppConfigCloseOption" Content="{DynamicResource LabelCloseOption}" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 <ComboBox x:Name="CloseOptionSelector" SelectedIndex="0" Grid.Row="1" Grid.Column="3" SelectionChanged="On_Closeoption_Selection_Changed">
-                                    <ComboBoxItem Content="{DynamicResource CloseOptionHide}" />
-                                    <ComboBoxItem Content="{DynamicResource CloseOptionQuit}" />
+                                    <ComboBoxItem Content="{DynamicResource ConfigCloseOptionMinimize}" />
+                                    <ComboBoxItem Content="{DynamicResource ConfigCloseOptionExit}" />
                                 </ComboBox>
 
                                 <Label x:Name="LabelSupportSystem" Content="{DynamicResource LabelSystem}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -338,22 +338,22 @@
 
                                 <Label x:Name="LabelCleanMethod" Content="{DynamicResource LabelCleanTrigger}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
                                 <ComboBox x:Name="CleanMethodSelector" SelectedIndex="0" Grid.Row="0" Grid.Column="3" SelectionChanged="On_CleanMethod_Selection_Changed">
-                                    <ComboBoxItem Content="{DynamicResource TriggerPeriod}" />
+                                    <ComboBoxItem Content="{DynamicResource TriggerTimer}" />
                                     <ComboBoxItem Content="{DynamicResource TriggerMonitor}" />
                                 </ComboBox>
 
                                 <Label x:Name="LabelCleanPolicy" Content="{DynamicResource LabelCleanPolicy}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
                                 <ComboBox x:Name="CleanPolicySelector" SelectedIndex="0" Grid.Row="1" Grid.Column="1" SelectionChanged="On_CleanPolicy_Selection_Changed">
+                                    <ComboBoxItem Content="{DynamicResource PolicyEmptyList}" />
                                     <ComboBoxItem Content="{DynamicResource PolicyCleanBlacklist}" />
                                     <ComboBoxItem Content="{DynamicResource PolicyKeepWhitelist}" />
-                                    <ComboBoxItem Content="{DynamicResource PolicyEmptyList}" />
                                 </ComboBox>
 
                                 <Label x:Name="LabelCleanCategory" Content="{DynamicResource LabelCleanCategory}" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
                                 <ComboBox x:Name="CleanCategorySelector" SelectedIndex="0" Grid.Row="1" Grid.Column="3" SelectionChanged="On_CleanCategory_Selection_Changed">
                                     <ComboBoxItem Content="{DynamicResource QuickAccess}" />
-                                    <ComboBoxItem Content="{DynamicResource RecentFiles}" />
                                     <ComboBoxItem Content="{DynamicResource FrequentFolders}" />
+                                    <ComboBoxItem Content="{DynamicResource RecentFiles}" />
                                 </ComboBox>
 
                                 <Label x:Name="LabelCleanInterval" Content="{DynamicResource LabelCleanInterval}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
@@ -363,7 +363,7 @@
                                     <ComboBoxItem Content="{DynamicResource IntervalAnHour}" />
                                 </ComboBox>
 
-                                <Label x:Name="LabelCommandNames" Content="{DynamicResource LabelCleanMenuItems}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+                                <Label x:Name="LabelCommandNames" Content="{DynamicResource LabelCleanMenuNames}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  />
                                 <TextBox x:Name="MenuNames" Grid.Row="2" Grid.Column="3" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             </Grid>
                         </GroupBox>

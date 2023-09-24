@@ -158,10 +158,13 @@
     <sys:String x:Key="LabelCloseOption">
         Fermer
     </sys:String>
-    <sys:String x:Key="CloseOptionHide">
+    <sys:String x:Key="ConfigCloseOptionHide">
         Cacher
     </sys:String>
-    <sys:String x:Key="CloseOptionQuit">
+    <sys:String x:Key="ConfigCloseOptionMinimize">
+        Minimiser
+    </sys:String>
+    <sys:String x:Key="ConfigCloseOptionExit">
         Sortie
     </sys:String>
     <sys:String x:Key="LabelSystem">
@@ -170,8 +173,8 @@
     <sys:String x:Key="SystemSupport">
         Soutien
     </sys:String>
-    <sys:String x:Key="SystemRequireMenuItems">
-        Éléments de menu requis
+    <sys:String x:Key="SystemRequireMenuNames">
+        Noms de menu requis
     </sys:String>
     <sys:String x:Key="LabelVersion">
         Version
@@ -195,6 +198,9 @@
     </sys:String>
     <sys:String x:Key="TriggerPeriod">
         Période
+    </sys:String>
+    <sys:String x:Key="TriggerTimer">
+        Minuteur
     </sys:String>
     <sys:String x:Key="TriggerMonitor">
         Monitrice
@@ -226,8 +232,8 @@
     <sys:String x:Key="IntervalAnHour">
         1 heure
     </sys:String>
-    <sys:String x:Key="LabelCleanMenuItems">
-        Éléments de menu
+    <sys:String x:Key="LabelCleanMenuNames">
+        Noms de menu
     </sys:String>
 
     <!-- Close Dialog -->

@@ -14,22 +14,15 @@ namespace CleanRecentMini
     public struct CleanFilterItem
     {
         public string id;
-        public byte group;
-        public byte category;
-        public bool state;
+        public byte group; // 0 for cleanlist, 1 for blacklist, 2 for whitelist
+        public byte category; // 0 for quick access, 1 for frequent folder, 2 for recent file
+        public bool state; // 0 for disabled, 1 for enabled
         public string keyword;
         public Int64 create_at;
         public Int64 update_at;
         public string author;
         public byte level;
         public List<CleanFilterItemLabel> labels;
-    }
-
-    public struct CleanedHistoryItem
-    {
-        public Int64 cleaned_at;
-        public List<string> cleaned_files;
-        public List<string> cleaned_folders;
     }
 
     public struct CleanedSnapshotItem
@@ -40,19 +33,29 @@ namespace CleanRecentMini
         public List<string> cleaned_folders;
     }
 
+    public struct CleanQuickAccessItem
+    {
+        public string name;
+        public string path;
+        public byte type;// 0 for unspecific, 1 for frequent folders, 2 for recent files
+        public List<string> keywords;
+        public byte cleaned_policy; // 0 for empty, 1 for clean blacklist, 2 for keep whitelist
+        public Int64 cleaned_at;
+    }
+
     public struct AppConfig
     {
         public Int64 start_time;
         public Int64 stop_time;
         public Int64 run_time;
-        public bool dark_mode;
-        public bool auto_start;
-        public bool close_to_tray;
+        public bool dark_mode; // 0 for light, 1 for dark
+        public bool auto_start; // 0 for disabled, 1 for enabled
+        public bool close_option; // 0 for minimize to tray, 1 for quit program
         public ushort close_trigger_count;
-        public bool ask_close_option;
+        public bool ask_close_option; // 0 for no asking close option, 1 for asking
         public ushort reask_close_count;
-        public bool is_certified_core;
-        public bool is_supported_system;
+        public bool is_certified_core; // 0 for uncertified, 1 for certified, specific for clean-recent
+        public bool is_supported_system; // 0 for unsupported, 1 for supported, determine by system ui culture code
         public string language;
         public string version;
     }
@@ -61,25 +64,22 @@ namespace CleanRecentMini
     {
         public bool is_monitor_running;
         public bool is_cron_running;
-        public byte action_state;
-        public byte clean_method;
-        public byte clean_policy;
-        public byte clean_category;
-        public string cron_expression;
+        public byte clean_state; // 0 for stop, 1 for auto, 2 for manual
+        public byte clean_trigger; // 0 for timer, 1 for monitor
+        public byte clean_policy; // 0 for empty, 1 for clean blacklist, 2 for keep whitelist
+        public byte clean_category; // 0 for all quick access, 1 for only frequent folders, 2 for only recent files
+        public string cron_expression; // timer interval
         public List<CleanFilterItem> filter_list;
         public Dictionary<string, Int64> next_runtime;
         public Dictionary<string, Int64> last_runtime;
-        public List<string> command_names;
+        public List<string> menu_names; // to support unsupported ui system
     }
 
     public struct CleanHistory
     {
-        public Int64 start_time;
-        public Int64 stop_time;
-        public Int64 run_time;
         public ushort clean_snapshots_max;
         public List<CleanedSnapshotItem> clean_snapshots;
-        public List<CleanedHistoryItem> cleaned_data;
+        public List<CleanQuickAccessItem> cleaned_data;
     }
 
     public struct ExportFilterList
@@ -298,16 +298,6 @@ namespace CleanRecentMini
         public string Files { get; set; }
         public string Folders { get; set; }
         public string Time { get; set; }
-    }
-
-    public class CleanQuickAccessItem
-    {
-        public string Name { get; set; }
-        public string Path { get; set; }
-        public byte Type { get; set; } // 0 for unspecific, 1 for folder, 2 for file
-        public List<string> Keywords { get; set; }
-        public byte CleanedGroup { get; set; } // 0 for blacklist, 1 for whitelist, 2 for empty
-        public Int64 CleanedTime { get; set; }
     }
 
     internal class DataStruct

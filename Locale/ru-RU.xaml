@@ -159,10 +159,13 @@
     <sys:String x:Key="LabelCloseOption">
         Закрывать
     </sys:String>
-    <sys:String x:Key="CloseOptionHide">
+    <sys:String x:Key="ConfigCloseOptionHide">
         Скрывать
     </sys:String>
-    <sys:String x:Key="CloseOptionQuit">
+    <sys:String x:Key="ConfigCloseOptionMinimize">
+        Минимизировать
+    </sys:String>
+    <sys:String x:Key="ConfigCloseOptionExit">
         Покидать
     </sys:String>
     <sys:String x:Key="LabelSystem">
@@ -197,6 +200,9 @@
     <sys:String x:Key="TriggerPeriod">
         Период
     </sys:String>
+    <sys:String x:Key="TriggerTimer">
+        Таймер
+    </sys:String>
     <sys:String x:Key="TriggerMonitor">
         Монитор
     </sys:String>
@@ -227,8 +233,8 @@
     <sys:String x:Key="IntervalAnHour">
         1 час
     </sys:String>
-    <sys:String x:Key="LabelCleanMenuItems">
-        Пункты меню
+    <sys:String x:Key="LabelCleanMenuNames">
+        Имена меню
     </sys:String>
 
     <!-- Close Dialog -->

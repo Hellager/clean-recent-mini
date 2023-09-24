@@ -59,6 +59,9 @@ namespace CleanRecentMini
         public bool closeRememberOption = false;
         public byte closeOption = 0; // 0 for exit, 1 for minimize
 
+        // Save data timer
+        System.Threading.Timer dataSaveTimer = null;
+
         public MainWindow()
         {
             this.Build_NotifyIcon();
@@ -66,6 +69,7 @@ namespace CleanRecentMini
             InitializeComponent();
 
             this.Load_AppData();
+            this.Start_Data_Save_Timer();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -95,7 +99,7 @@ namespace CleanRecentMini
                     // Handle close event with dialog result
                     this.appConfig.ask_close_option = false;
                     Logger.Debug("Remember choice, use new app config data to handle close event");
-                    if (this.appConfig.close_to_tray == false)
+                    if (this.appConfig.close_option == false)
                     {
                         Logger.Debug("Quit program");
                         this.Save_AppConfig();
@@ -134,7 +138,7 @@ namespace CleanRecentMini
             else
             {
                 // With default config
-                if (this.appConfig.close_to_tray == false)
+                if (this.appConfig.close_option == false)
                 {
                     Logger.Debug("Quit program");
                     this.Save_AppConfig();
@@ -274,7 +278,7 @@ namespace CleanRecentMini
             config.run_time = 0;
             config.dark_mode = false;
             config.auto_start = false;
-            config.close_to_tray = false;
+            config.close_option = false;
             config.close_trigger_count = 0;
             config.ask_close_option = true;
             config.reask_close_count = 5;
@@ -291,15 +295,15 @@ namespace CleanRecentMini
             var config = new CleanConfig();
             config.is_monitor_running = false;
             config.is_cron_running = false;
-            config.action_state = 0;
-            config.clean_method = 0;
+            config.clean_state = 0;
+            config.clean_trigger = 0;
             config.clean_policy = 0;
             config.clean_category = 0;
             config.cron_expression = "";
             config.filter_list = new List<CleanFilterItem>();
             config.next_runtime = new Dictionary<string, long>();
             config.last_runtime = new Dictionary<string, long>();
-            config.command_names = new List<string>();
+            config.menu_names = new List<string>();
 
             return config;
         }
@@ -307,12 +311,9 @@ namespace CleanRecentMini
         private CleanHistory Build_Default_CleanHistory()
         {
             var history = new CleanHistory();
-            history.start_time = 0;
-            history.stop_time = 0;
-            history.run_time = 0;
             history.clean_snapshots = new List<CleanedSnapshotItem>();
             history.clean_snapshots_max = 9;
-            history.cleaned_data = new List<CleanedHistoryItem>();
+            history.cleaned_data = new List<CleanQuickAccessItem>();
 
             return history;
         }
@@ -442,6 +443,23 @@ namespace CleanRecentMini
             this.Load_AppConfig();
             this.Load_CleanConfig();
             this.Load_CleanHistory();
+        }
+
+        private void On_DataSaveTimer_Triggered(object state)
+        {
+            this.Save_AppConfig();
+            this.Save_CleanConfig();
+            this.Save_CleanHistory();
+
+            Logger.Debug("Save app data");
+        }
+
+        private void Start_Data_Save_Timer()
+        {
+            this.dataSaveTimer = new System.Threading.Timer(new TimerCallback(On_DataSaveTimer_Triggered), null, Timeout.Infinite, Timeout.Infinite);
+            this.dataSaveTimer.Change(TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(10)); // Save data every 10 minutes
+
+            Logger.Debug("Start data save timer");
         }
 
 
@@ -635,11 +653,11 @@ namespace CleanRecentMini
             {
                 bool isTarget = false;
                 CleanQuickAccessItem item = new CleanQuickAccessItem();
-                item.Name = clean_source[clean_source_key_arr[i]];
-                item.Path = clean_source_key_arr[i];
-                item.Type = 0; // Set when clean
-                item.CleanedGroup = 0; // Set when clean
-                item.CleanedTime = 0; // Set when clean
+                item.name = clean_source[clean_source_key_arr[i]];
+                item.path = clean_source_key_arr[i];
+                item.type = 0; // Set when clean
+                item.cleaned_policy = 0; // Set when clean
+                item.cleaned_at = 0; // Set when clean
 
                 // Check Item Type
                 //Stopwatch sw = new Stopwatch();
@@ -660,10 +678,10 @@ namespace CleanRecentMini
                 //if (isRecentFiles) item.Type = 2;
 
                 // Check Item Keyword
-                item.Keywords = new List<string>();
+                item.keywords = new List<string>();
                 Parallel.ForEach(this.cleanConfig.filter_list, filter =>
                 {
-                    if (item.Path.Contains(filter.keyword))
+                    if (item.path.Contains(filter.keyword))
                     {
                         if (group == 0)
                         {
@@ -671,13 +689,13 @@ namespace CleanRecentMini
                                 filter.state == true))
                             {
                                 isTarget = true;
-                                item.Keywords.Add(filter.keyword);
+                                item.keywords.Add(filter.keyword);
                             }
                         }
                         else
                         {
                             isTarget = true;
-                            item.Keywords.Add(filter.keyword);
+                            item.keywords.Add(filter.keyword);
                         }
                     }
                 });
@@ -784,19 +802,25 @@ namespace CleanRecentMini
 
         private void Update_Filter_Status()
         {
-            this.ValueInBlacklist.Text = this.Get_Cur_In_Blacklist().Count.ToString();
-            this.ValueInCleanlist.Text = this.Get_Cur_In_Cleanlist().Count.ToString() + " / " + this.Get_Cur_Quick_Access().Count.ToString();
-            this.ValueInWhitelist.Text = this.Get_Cur_In_Whitelist().Count.ToString();
+            this.ValueInBlacklist.Text = this.Get_Cur_CleanQuickAccessItems(1).Count.ToString();
+            this.ValueInCleanlist.Text = this.Get_Cur_CleanQuickAccessItems(0).Count.ToString() + " / " + this.Get_Cur_Quick_Access().Count.ToString();
+            this.ValueInWhitelist.Text = this.Get_Cur_CleanQuickAccessItems(2).Count.ToString();
         }
 
         private void Update_History_Status()
         {
             Int32 cleaned_times = 0, cleaned_files = 0, cleaned_folders = 0;
             cleaned_times = this.cleanHistory.cleaned_data.Count;
-            foreach (CleanedHistoryItem history in this.cleanHistory.cleaned_data)
+            foreach (CleanQuickAccessItem item in this.cleanHistory.cleaned_data)
             {
-                cleaned_files += history.cleaned_files.Count;
-                cleaned_folders += history.cleaned_folders.Count;
+                if (item.type == 1)
+                {
+                    cleaned_folders += 1;
+                } 
+                else if (item.type == 2)
+                {
+                    cleaned_files += 1;
+                }
             }
 
             this.ValueCleanedFiles.Text = cleaned_files.ToString();
@@ -999,7 +1023,7 @@ namespace CleanRecentMini
                 ThemesController.SetTheme(ThemeType.LightTheme);
             }
 
-            if (this.cleanConfig.action_state == 2)
+            if (this.cleanConfig.clean_state == 2)
             {
                 if (this.appConfig.dark_mode == false)
                 {
@@ -1062,7 +1086,7 @@ namespace CleanRecentMini
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
 
-            this.appConfig.close_to_tray = (idx != 0);
+            this.appConfig.close_option = (idx != 0);
 
             this.appConfig.ask_close_option = true;
         }
@@ -1072,7 +1096,7 @@ namespace CleanRecentMini
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
 
-            this.cleanConfig.action_state = (byte)idx;
+            this.cleanConfig.clean_state = (byte)idx;
 
             if (idx == 2)
             {
@@ -1113,7 +1137,7 @@ namespace CleanRecentMini
             if (idx == 1)
             {
                 // Restart trigger
-                if (this.cleanConfig.clean_method == 0)
+                if (this.cleanConfig.clean_trigger == 0)
                 {
                     // Start timer;
                     if (this.cleanIntervalTimer != null)
@@ -1132,7 +1156,7 @@ namespace CleanRecentMini
                         {
                             if (this.CleanIntervalSelector.SelectedIndex == 0)
                             {
-                                interval = 1;
+                                interval = 10;
                             }
                             else if (this.CleanIntervalSelector.SelectedIndex == 1)
                             {
@@ -1159,7 +1183,7 @@ namespace CleanRecentMini
 
                     }
                 }
-                else if (this.cleanConfig.clean_method == 1)
+                else if (this.cleanConfig.clean_trigger == 1)
                 {
                     // Start watcher;
                     this.debounceWatcherValid = true;
@@ -1216,7 +1240,7 @@ namespace CleanRecentMini
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
 
-            this.cleanConfig.clean_method = (byte)idx;
+            this.cleanConfig.clean_trigger = (byte)idx;
         }
 
         private void On_CleanPolicy_Selection_Changed(object sender, SelectionChangedEventArgs e)
@@ -1294,7 +1318,7 @@ namespace CleanRecentMini
             string path = eventArgs.FullPath.ToString();
             Logger.Debug("Event path: " + path);
 
-            if (this.cleanConfig.action_state == 2)
+            if (this.cleanConfig.clean_state == 2)
             {
                 Logger.Debug("Clean require manual confirm");
                 // https://stackoverflow.com/questions/2329978/the-calling-thread-must-be-sta-because-many-ui-components-require-this
@@ -1313,7 +1337,7 @@ namespace CleanRecentMini
 
         private void On_IntervalTimer_Triggered(object state)
         {
-            if (this.cleanConfig.action_state == 2)
+            if (this.cleanConfig.clean_state == 2)
             {
                 Logger.Debug("Clean require manual confirm");
                 // https://stackoverflow.com/questions/2329978/the-calling-thread-must-be-sta-because-many-ui-components-require-this
@@ -1393,99 +1417,62 @@ namespace CleanRecentMini
 
         private void Handle_Clean_QuickAccess()
         {
-            // category
-            List<string> cleanSource = new List<string>();
-            if (this.cleanConfig.clean_category == 1)
-            {
-                cleanSource = this.quickAccessHandler.GetFrequentFoldersList();
-            }
-            else if (this.cleanConfig.clean_category == 2)
-            {
-                cleanSource = this.quickAccessHandler.GetRecentFilesList();
-            }
-            else
-            {
-                cleanSource = this.quickAccessHandler.GetQuickAccessList();
-            }
+            List<CleanQuickAccessItem> to_clean_list = this.Get_Cur_CleanQuickAccessItems(0);
+            List<CleanQuickAccessItem> after_clean_list = new List<CleanQuickAccessItem>();
+            List<string> to_clean_paths = new List<string>();
 
-            // policy
-            List<string> cleanList = new List<string>();
-            if (this.cleanConfig.clean_policy == 2)
-            {
-                cleanList = cleanSource;
-            }
-            else
-            {
-                for (Int32 i = 0; i < cleanSource.Count; i++)
-                {
-                    for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
-                    {
-                        if (cleanSource[i].Contains(this.cleanConfig.filter_list[j].keyword))
-                        {
-                            if (this.cleanConfig.filter_list[i].group == this.cleanConfig.clean_policy &&
-                                this.cleanConfig.filter_list[i].state)
-                            {
-                                cleanList.Add(cleanSource[i]);
+            if (to_clean_list.Count == 0) return;
 
-                                Logger.Debug(string.Format("Cur keyword: {0}, cur source: {1}", this.cleanConfig.filter_list[j].keyword, cleanSource[i]));
-                            }
-                        }
-                    }
-                }
-            }
+            List<string> before_quick_access = this.quickAccessHandler.GetQuickAccessList();
+            List<string> before_frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
+            List<string> before_recent_files = this.quickAccessHandler.GetRecentFilesList();
 
-            // command
-            Int32 before_clean_count = this.quickAccessHandler.GetQuickAccessDict().Count;
-            Logger.Debug(string.Format("Detect {0} items to remove from quick access", cleanList.Count));
-            if (this.cleanConfig.command_names.Count > 0)
+            // Menu names
+            Logger.Debug(string.Format("Detect {0} items to remove from quick access", to_clean_list.Count));
+            if (this.cleanConfig.menu_names.Count > 0)
             {
-                Logger.Debug("Add system command names");
-                foreach (string item in this.cleanConfig.command_names)
+                Logger.Debug("Add system menu names");
+                foreach (string item in this.cleanConfig.menu_names)
                 {
                     this.quickAccessHandler.AddQuickAccessMenuName(item);
                 }
             }
 
-            var clean_time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
-            this.cleanHistory.run_time = clean_time;
-
-            var cleaned_files = new List<string>();
-            var cleaned_folders = new List<string>();
-            var failed_clean_files = new List<string>();
-            var failed_clean_floders = new List<string>();
-            var quick_access_snapshot = this.quickAccessHandler.GetQuickAccessList();
-            var before_recent_files = this.quickAccessHandler.GetRecentFilesList();
-            var before_frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
-            
-            this.quickAccessHandler.RemoveFromQuickAccess(cleanList);
-
-            var after_recent_files = this.quickAccessHandler.GetRecentFilesList();
-            var after_frequent_folders = this.quickAccessHandler.GetFrequentFoldersList();
-
-            for (int i = 0; i < cleanList.Count; i++)
+            foreach(CleanQuickAccessItem item in to_clean_list)
             {
-                if (before_recent_files.Contains(cleanList[i]))
+                to_clean_paths.Add(item.path);
+            }
+            Int64 clean_time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+            this.quickAccessHandler.RemoveFromQuickAccess(to_clean_paths);
+
+            List<string> after_quick_access = this.quickAccessHandler.GetQuickAccessList();
+
+            for(int i = to_clean_list.Count - 1; i >= 0; i--)
+            {
+                if (after_quick_access.Contains(to_clean_list[i].path))
                 {
-                    if (!after_recent_files.Contains(cleanList[i]))
-                    {
-                        cleaned_files.Add(cleanList[i]);
-                    }
-                    else
-                    {
-                        failed_clean_files.Add(cleanList[i]);
-                    }
+                    // Failed remove item from quick access
+                    Logger.Warn("Failed to remove " + to_clean_list[i].path + " from quick access");
+                    continue;
                 }
-                else if (before_frequent_folders.Contains(cleanList[i]))
-                {
-                    if (!after_frequent_folders.Contains(cleanList[i]))
-                    {
-                        cleaned_folders.Add(cleanList[i]);
-                    }
-                    else
-                    {
-                        failed_clean_floders.Add(cleanList[i]);
-                    }
-                }
+
+                CleanQuickAccessItem item = to_clean_list[i];
+                item.cleaned_at = clean_time;
+                item.cleaned_policy = this.cleanConfig.clean_policy;
+
+                bool inQuickAccess = before_quick_access.Contains(item.path);
+                bool inFrequentFolders = before_frequent_folders.Contains(item.path);
+                bool inRecentFiles = before_recent_files.Contains(item.path);
+
+                bool isUnSpecific = inQuickAccess && !inRecentFiles && !inFrequentFolders;
+                bool isFrequentFolders = inFrequentFolders && !isUnSpecific && !inRecentFiles;
+                bool isRecentFiles = inRecentFiles && !isUnSpecific && !inFrequentFolders;
+
+                if (isUnSpecific) item.type = 0;
+                if (isFrequentFolders) item.type = 1;
+                if (isRecentFiles) item.type = 2;
+
+                after_clean_list.Add(item);
             }
 
             // update snapshot
@@ -1499,39 +1486,19 @@ namespace CleanRecentMini
             this.cleanHistory.clean_snapshots.Add(new CleanedSnapshotItem()
             {
                 cleaned_at = clean_time,
-                quick_access = quick_access_snapshot,
-                cleaned_files = cleaned_files,
-                cleaned_folders = cleaned_folders
+                quick_access = before_quick_access,
+                cleaned_folders = before_frequent_folders,
+                cleaned_files = before_recent_files,
             });
 
-            this.cleanHistory.cleaned_data.Add(new CleanedHistoryItem()
+            foreach(CleanQuickAccessItem item in after_clean_list)
             {
-                cleaned_at = clean_time,
-                cleaned_files = cleaned_files,
-                cleaned_folders = cleaned_folders
-            });
+                this.cleanHistory.cleaned_data.Add(item);
+            }
 
             this.Save_CleanHistory();
 
-            Int32 failed_clean = 0;
-            List<string> cur_quick_access = this.quickAccessHandler.GetQuickAccessDict().Keys.ToList();
-            foreach (string item in cleanList)
-            {
-                if (cur_quick_access.Contains(item))
-                {
-                    failed_clean++;
-                    Logger.Debug(string.Format("Failed to remove path: {0} from quick access", item));
-                }
-            }
-
-            if (failed_clean > 0)
-            {
-                // Show some error message
-            }
-            else
-            {
-                Logger.Debug(string.Format("Clean recent success! Remove {0} items from quick access", cleanList.Count));
-            }
+            Logger.Debug(string.Format("Clean recent finished! Remove {0} items from quick access", after_clean_list.Count));
         }
     }
 }
