@@ -274,5 +274,8 @@
     <sys:String x:Key="TitlePath">
         Path
     </sys:String>
+    <sys:String x:Key="TitleKeywords">
+        Keywords
+    </sys:String>
 
 </ResourceDictionary>

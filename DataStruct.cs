@@ -273,16 +273,24 @@ namespace CleanRecentMini
         }
     }
 
-    public class StatusTableItem
+    public class StatusTableNormalItem
     {
         public string Name { get; set; }
         public string Path { get; set; }
+    }
+
+    public class StatusTableFilterItem
+    {
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public string Keywords { get; set; }
     }
 
     public class StatusTableCleanedItem
     {
         public string Path { get; set; }
         public string Time { get; set; }
+        public string Keyword { get; set; }
     }
 
     public class StatusTableCleanedTimesItem
@@ -291,6 +299,17 @@ namespace CleanRecentMini
         public string Folders { get; set; }
         public string Time { get; set; }
     }
+
+    public class CleanQuickAccessItem
+    {
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public byte Type { get; set; } // 0 for unspecific, 1 for folder, 2 for file
+        public List<string> Keywords { get; set; }
+        public byte CleanedGroup { get; set; } // 0 for blacklist, 1 for whitelist, 2 for empty
+        public Int64 CleanedTime { get; set; }
+    }
+
     internal class DataStruct
     {
     }

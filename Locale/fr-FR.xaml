@@ -274,5 +274,8 @@
     <sys:String x:Key="TitlePath">
         Chemin
     </sys:String>
+    <sys:String x:Key="TitleKeywords">
+        mots clés
+    </sys:String>
 
 </ResourceDictionary>

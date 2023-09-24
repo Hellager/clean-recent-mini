@@ -21,6 +21,8 @@ using FramePFX.Themes;
 using Newtonsoft.Json;
 using QuickAccess;
 
+using System.Diagnostics;
+
 namespace CleanRecentMini
 {
     /// <summary>
@@ -601,6 +603,94 @@ namespace CleanRecentMini
             return InCleanlist;
         }
 
+        private List<CleanQuickAccessItem> Get_Cur_CleanQuickAccessItems(byte group)
+        {
+            // group 0 for in cleanlist, 1 for in blacklist, 2 for in whitelist
+            List<CleanQuickAccessItem> res = new List<CleanQuickAccessItem>();
+
+            Dictionary<string, string> clean_source = new Dictionary<string, string>();
+            if (group == 0)
+            {
+                if (this.cleanConfig.clean_category == 1)
+                {
+                    clean_source = this.Get_Cur_Frequent_Folders();
+                }
+                else if (this.cleanConfig.clean_category == 2)
+                {
+                    clean_source = this.Get_Cur_Recent_Files();
+                }
+                else
+                {
+                    clean_source = this.quickAccessHandler.GetQuickAccessDict();
+                }
+            }
+            else
+            {
+                clean_source = this.quickAccessHandler.GetQuickAccessDict();
+            }
+
+
+            string[] clean_source_key_arr = clean_source.Keys.ToArray();
+            for(int i = 0; i < clean_source_key_arr.Length; i++)
+            {
+                bool isTarget = false;
+                CleanQuickAccessItem item = new CleanQuickAccessItem();
+                item.Name = clean_source[clean_source_key_arr[i]];
+                item.Path = clean_source_key_arr[i];
+                item.Type = 0; // Set when clean
+                item.CleanedGroup = 0; // Set when clean
+                item.CleanedTime = 0; // Set when clean
+
+                // Check Item Type
+                //Stopwatch sw = new Stopwatch();
+                //sw.Start();
+                //bool inRecentFiles = this.Get_Cur_Recent_Files().ContainsKey(item.Path);
+                //bool inFrequentFolders = this.Get_Cur_Frequent_Folders().ContainsKey(item.Path);
+                //bool inQuickAccess = this.Get_Cur_Quick_Access().ContainsKey(item.Path);
+                //sw.Stop();
+                //Logger.Debug("Cur idx " + i + ", time: " + sw.ElapsedMilliseconds);
+                //sw.Reset();
+
+                //bool isUnSpecific = inQuickAccess && !inRecentFiles && !inFrequentFolders;
+                //bool isFrequentFolders = inFrequentFolders && !isUnSpecific && !inRecentFiles;
+                //bool isRecentFiles = inRecentFiles && !isUnSpecific && !inFrequentFolders;
+
+                //if (isUnSpecific) item.Type = 0;
+                //if (isFrequentFolders) item.Type = 1;
+                //if (isRecentFiles) item.Type = 2;
+
+                // Check Item Keyword
+                item.Keywords = new List<string>();
+                Parallel.ForEach(this.cleanConfig.filter_list, filter =>
+                {
+                    if (item.Path.Contains(filter.keyword))
+                    {
+                        if (group == 0)
+                        {
+                            if (this.cleanConfig.clean_policy == 2 || (filter.group == this.cleanConfig.clean_policy &&
+                                filter.state == true))
+                            {
+                                isTarget = true;
+                                item.Keywords.Add(filter.keyword);
+                            }
+                        }
+                        else
+                        {
+                            isTarget = true;
+                            item.Keywords.Add(filter.keyword);
+                        }
+                    }
+                });
+
+                if (isTarget)
+                {
+                    res.Add(item);
+                }
+            }
+
+            return res;
+        }
+
         private void Show_Recent_Files(object sender, EventArgs e)
         {
             var res = this.Get_Cur_Recent_Files();
@@ -633,31 +723,31 @@ namespace CleanRecentMini
 
         private void Show_In_Blacklist(object sender, EventArgs e)
         {
-            var res = this.Get_Cur_In_Blacklist();
+            var res = this.Get_Cur_CleanQuickAccessItems(1);
 
             StatusDialog dialog = new StatusDialog();
             dialog.SetShowMode(3);
-            dialog.SetShowNoramlData(res);
+            dialog.SetShowFilterData(res);
             dialog.Show();
         }
 
         private void Show_In_Cleanlist(object sender, EventArgs e)
         {
-            var res = this.Get_Cur_In_Cleanlist();
+            var res = this.Get_Cur_CleanQuickAccessItems(0);
 
             StatusDialog dialog = new StatusDialog();
             dialog.SetShowMode(4);
-            dialog.SetShowNoramlData(res);
+            dialog.SetShowFilterData(res);
             dialog.Show();
         }
 
         private void Show_In_Whitelist(object sender, EventArgs e)
         {
-            var res = this.Get_Cur_In_Whitelist();
+            var res = this.Get_Cur_CleanQuickAccessItems(2);
 
             StatusDialog dialog = new StatusDialog();
             dialog.SetShowMode(5);
-            dialog.SetShowNoramlData(res);
+            dialog.SetShowFilterData(res);
             dialog.Show();
         }
 

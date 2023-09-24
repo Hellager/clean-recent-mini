@@ -17,6 +17,16 @@
                 </DataGrid>
             </TabItem>
 
+            <TabItem x:Name="ShowFilter" Header="ShowFilter" Visibility="Collapsed">
+                <DataGrid x:Name="FilterGird" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="1*" Header="{DynamicResource Name}" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Width="4*" Header="{DynamicResource Path}" Binding="{Binding Path}" />
+                        <DataGridTextColumn Width="1*" Header="{DynamicResource TitleKeywords}" Binding="{Binding Keywords}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
             <TabItem x:Name="ShowHistory" Header="ShowHistory" Visibility="Collapsed">
                 <DataGrid x:Name="CleanedGird" AutoGenerateColumns="False" CanUserAddRows="False">
                     <DataGrid.Columns>

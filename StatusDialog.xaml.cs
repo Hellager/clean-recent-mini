@@ -37,18 +37,11 @@ namespace CleanRecentMini
             ResourceDictionary resourceDictionary;
             resourceDictionary = System.Windows.Application.Current.Resources.MergedDictionaries[3];
 
-            if (data < 6)
-            {
-                this.StatusController.SelectedIndex = 0;
-            }
-            else
-            {
-                this.StatusController.SelectedIndex = 1;
-            }
+            this.StatusController.SelectedIndex = data / 3;
 
             if (data == 7)
             {
-                this.StatusController.SelectedIndex = 2;
+                this.StatusController.SelectedIndex = 3;
             }
 
             this.mode = data;
@@ -60,19 +53,38 @@ namespace CleanRecentMini
         {
             if (this.StatusController.SelectedIndex == 0)
             {
-                List<StatusTableItem> table_data = new List<StatusTableItem>();
+                List<StatusTableNormalItem> table_data = new List<StatusTableNormalItem>();
                 foreach (var item in data)
                 {
-                    table_data.Add(new StatusTableItem() { Name = item.Value, Path = item.Key });
+                    table_data.Add(new StatusTableNormalItem() { Name = item.Value, Path = item.Key });
                 }
 
                 this.NormalGird.ItemsSource = table_data;
             }
         }
 
-        public void SetShowCleanedData(List<CleanedHistoryItem> data)
+        public void SetShowFilterData(List<CleanQuickAccessItem> data)
         {
             if (this.StatusController.SelectedIndex == 1)
+            {
+                List<StatusTableFilterItem> table_data = new List<StatusTableFilterItem>();
+                foreach (var item in data)
+                {
+                    table_data.Add(new StatusTableFilterItem()
+                    {
+                        Name = item.Name,
+                        Path = item.Path,
+                        Keywords = String.Join(", ", item.Keywords.ToArray())
+                    });
+                }
+
+                this.FilterGird.ItemsSource = table_data;
+            }
+        }
+
+        public void SetShowCleanedData(List<CleanedHistoryItem> data)
+        {
+            if (this.StatusController.SelectedIndex == 2)
             {
                 List<StatusTableCleanedItem> table_data = new List<StatusTableCleanedItem>();
                 foreach (var item in data)

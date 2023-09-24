@@ -274,4 +274,8 @@
     <sys:String x:Key="TitlePath">
         路徑
     </sys:String>
+    <sys:String x:Key="TitleKeywords">
+        關鍵詞
+    </sys:String>
+    
 </ResourceDictionary>

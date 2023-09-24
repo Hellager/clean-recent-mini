@@ -275,5 +275,8 @@
     <sys:String x:Key="TitlePath">
         Путь
     </sys:String>
-    
+    <sys:String x:Key="TitleKeywords">
+        ключевые слова
+    </sys:String>
+
 </ResourceDictionary>
