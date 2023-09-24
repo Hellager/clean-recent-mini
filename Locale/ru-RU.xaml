@@ -12,6 +12,9 @@
     <sys:String x:Key="Enabled">
         Включено
     </sys:String>
+    <sys:String x:Key="Cleanlist">
+        чистый список
+    </sys:String>
     <sys:String x:Key="Blacklist">
         Черный список
     </sys:String>

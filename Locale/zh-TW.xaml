@@ -12,6 +12,9 @@
     <sys:String x:Key="Enabled">
         啟用
     </sys:String>
+    <sys:String x:Key="Cleanlist">
+        清理名單
+    </sys:String>
     <sys:String x:Key="Blacklist">
         黑名單
     </sys:String>

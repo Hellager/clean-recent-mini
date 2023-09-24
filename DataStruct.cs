@@ -204,7 +204,7 @@ namespace CleanRecentMini
 
         public FilterlistTableItem(CleanFilterItem data)
         {
-            List<string> GroupDespEnumKeys = new List<string>() { "Blacklist", "Whitelist" };
+            List<string> GroupDespEnumKeys = new List<string>() { "Cleanlist", "Blacklist", "Whitelist" };
             List<string> CategoryDespEnumKeys = new List<string>() { "QuickAccess", "RecentFiles", "FrequentFolders" };
             List<string> StateDespEnumKeys = new List<string>() { "Disabled", "Enabled" };
 

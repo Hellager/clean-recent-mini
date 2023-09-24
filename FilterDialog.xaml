@@ -38,6 +38,7 @@
 
                     <Label Content="{DynamicResource TitleGroup}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <ComboBox x:Name="GroupSelector"  SelectedIndex="0"  Grid.Row="2" Grid.Column="1" SelectionChanged="On_Item_Group_Selection_Changed" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBoxItem Content="{DynamicResource Cleanlist}" />
                         <ComboBoxItem Content="{DynamicResource Blacklist}" />
                         <ComboBoxItem Content="{DynamicResource Whitelist}" />
                     </ComboBox>

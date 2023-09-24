@@ -659,40 +659,13 @@ namespace CleanRecentMini
                 item.cleaned_policy = 0; // Set when clean
                 item.cleaned_at = 0; // Set when clean
 
-                // Check Item Type
-                //Stopwatch sw = new Stopwatch();
-                //sw.Start();
-                //bool inRecentFiles = this.Get_Cur_Recent_Files().ContainsKey(item.Path);
-                //bool inFrequentFolders = this.Get_Cur_Frequent_Folders().ContainsKey(item.Path);
-                //bool inQuickAccess = this.Get_Cur_Quick_Access().ContainsKey(item.Path);
-                //sw.Stop();
-                //Logger.Debug("Cur idx " + i + ", time: " + sw.ElapsedMilliseconds);
-                //sw.Reset();
-
-                //bool isUnSpecific = inQuickAccess && !inRecentFiles && !inFrequentFolders;
-                //bool isFrequentFolders = inFrequentFolders && !isUnSpecific && !inRecentFiles;
-                //bool isRecentFiles = inRecentFiles && !isUnSpecific && !inFrequentFolders;
-
-                //if (isUnSpecific) item.Type = 0;
-                //if (isFrequentFolders) item.Type = 1;
-                //if (isRecentFiles) item.Type = 2;
-
                 // Check Item Keyword
                 item.keywords = new List<string>();
                 Parallel.ForEach(this.cleanConfig.filter_list, filter =>
                 {
                     if (item.path.Contains(filter.keyword))
                     {
-                        if (group == 0)
-                        {
-                            if (this.cleanConfig.clean_policy == 2 || (filter.group == this.cleanConfig.clean_policy &&
-                                filter.state == true))
-                            {
-                                isTarget = true;
-                                item.keywords.Add(filter.keyword);
-                            }
-                        }
-                        else
+                        if ((group == filter.group && filter.state == true) || (this.cleanConfig.clean_policy == 0 && group == 0))
                         {
                             isTarget = true;
                             item.keywords.Add(filter.keyword);
@@ -836,7 +809,7 @@ namespace CleanRecentMini
         }
 
         /************* About Filter Menu ******************/
-        private void Refresh_Filterlist_Table()
+        public void Refresh_Filterlist_Table()
         {
             this.FilterlistTableData.Clear();
 

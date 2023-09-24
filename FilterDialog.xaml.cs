@@ -23,7 +23,7 @@ namespace CleanRecentMini
     {
         AppendTable,
         EditTable,
-        InputData,
+        ImportData,
         ExportData,
         CleanData
     }
@@ -269,7 +269,7 @@ namespace CleanRecentMini
                     }
                     break;
 
-                case FilterlistDialogMode.InputData:
+                case FilterlistDialogMode.ImportData:
                     {
                         int add_item_cnt = 0, repeat_item_cnt = 0;
                         Dictionary<string, string> cur_filter_item_dict = new Dictionary<string, string>(); // id: keyword
@@ -305,9 +305,15 @@ namespace CleanRecentMini
 
                                     add_item_cnt++;
                                 }
-                                repeat_item_cnt++;
+                                else
+                                {
+                                    repeat_item_cnt++;
+                                }
+                                
                             }
                         }
+
+                        mainWindow.Refresh_Filterlist_Table();
 
                         Logger.Debug("Total " + add_item_cnt + " items added, " + repeat_item_cnt + " repeated.");
 
