@@ -310,7 +310,12 @@
                                 <Label x:Name="SupportSystem" Content="{DynamicResource SystemSupport}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                                 <Label x:Name="LabelVersion" Content="{DynamicResource LabelVersion}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Label x:Name="Version" Content="v0.0.0" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="3"  HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Hyperlink Click="On_Version_Link_Click">
+                                        <TextBlock x:Name="Version" Text="v0.0.0"/>
+                                    </Hyperlink>
+                                </TextBlock>
                             </Grid>
                         </GroupBox>
 

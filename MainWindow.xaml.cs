@@ -1091,6 +1091,18 @@ namespace CleanRecentMini
             this.appConfig.ask_close_option = true;
         }
 
+        private void On_Version_Link_Click(object sender, RoutedEventArgs e)
+        {
+           try
+            {
+                System.Diagnostics.Process.Start("https://clean-recent.hellagur.com");
+            }
+            catch
+            {
+                Logger.Error("Failed to open web page");
+            }
+        }
+
         /********** About Clean Config ***************/
         private void On_ActionState_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
