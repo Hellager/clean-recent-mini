@@ -1,0 +1,49 @@
+name: Release Application
+
+on: 
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]'
+  workflow_dispatch:
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        os: [windows-latest]
+        nuget: [latest]
+        dotnet: ['6.x']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up .NET Framework
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+        
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Restore Nuget Packages
+        run: |
+          nuget restore clean-recent-mini.sln
+
+      - name: Build Solution
+        run: |
+          msbuild.exe clean-recent-mini.sln /p:platform="Any CPU" /p:configuration="Release"
+
+      - name: Create Draft Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./bin/Release/CleanRecentMini.exe
+          tag_name: ${{ github.ref }}
+          body: |
+            Description of the draft release.
+          draft: true
+          token: ${{ secrets.GITHUB_TOKEN }}
