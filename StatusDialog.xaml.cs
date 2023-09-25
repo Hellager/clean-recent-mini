@@ -1,17 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using NLog;
 
 namespace CleanRecentMini
@@ -29,6 +19,11 @@ namespace CleanRecentMini
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Set statusdialog mode
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> Dialog mode.</param>
         public void SetShowMode(byte data)
         {
             List<string> windowTitleKeys = new List<string>() { "RecentFiles", "QuickAccess", "FrequentFolders", "InBlacklist", "InCleanlist", "InWhitelist", "CleandFiles", "CleanTimes", "CleanedFolders" };
@@ -49,6 +44,11 @@ namespace CleanRecentMini
             this.Title = resourceDictionary.Contains(windowTitleKeys[data]) ? resourceDictionary[windowTitleKeys[data]].ToString() : windowTitleKeys[data];
         }
 
+        /// <summary>
+        /// Set status RecentFiles/QuickAccess/FrequentFolders data
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> Status RecentFiles/QuickAccess/FrequentFolders data.</param>
         public void SetShowNoramlData(Dictionary<string, string> data)
         {
             if (this.StatusController.SelectedIndex == 0)
@@ -63,6 +63,11 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Set status InBlacklist/InCleanlist/InWhitelist data
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> Status InBlacklist/InCleanlist/InWhitelist data.</param>
         public void SetShowFilterData(List<CleanQuickAccessItem> data)
         {
             if (this.StatusController.SelectedIndex == 1)
@@ -82,6 +87,11 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Set status CleanedFiles/CleanTimes/CleanedFolders data
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> Status CleanedFiles/CleanTimes/CleanedFolders data.</param>
         public void SetShowCleanedData(List<CleanQuickAccessItem> data)
         {
             // <time, <type, path>>

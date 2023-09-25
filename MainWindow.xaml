@@ -42,7 +42,7 @@
 
                         <Border Grid.Row="0" Grid.Column="0"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,-2,0,0">
-                            <Button Click="Show_Recent_Files">
+                            <Button x:Name="StatusRecentFiles" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelRecentFiles" Text="{DynamicResource RecentFiles}"/>
                                     <TextBlock x:Name="ValueRecentFiles" Text="0" HorizontalAlignment="Center"/>
@@ -52,7 +52,7 @@
 
                         <Border Grid.Row="0" Grid.Column="1"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,-2,0,0">
-                            <Button Click="Show_Quick_Access">
+                            <Button x:Name="StatusQuickAccess" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelQuickAccess" Text="{DynamicResource QuickAccess}"/>
                                     <TextBlock x:Name="ValueQuickAccess" Text="0" HorizontalAlignment="Center"/>
@@ -62,7 +62,7 @@
 
                         <Border Grid.Row="0" Grid.Column="2"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0,-2, -2, 0">
-                            <Button Click="Show_Frequent_Folders">
+                            <Button x:Name="StatusFrequentFolders" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelFrequentFolders" Text="{DynamicResource FrequentFolders}"/>
                                     <TextBlock x:Name="ValueFrequentFolders" Text="0" HorizontalAlignment="Center"/>
@@ -72,7 +72,7 @@
 
                         <Border Grid.Row="1" Grid.Column="0"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,0">
-                            <Button Click="Show_In_Blacklist">
+                            <Button x:Name="StatusInBlacklist" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelInBlacklist" Text="{DynamicResource InBlacklist}"/>
                                     <TextBlock x:Name="ValueInBlacklist" Text="0" HorizontalAlignment="Center"/>
@@ -82,7 +82,7 @@
 
                         <Border Grid.Row="1" Grid.Column="1"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,0">
-                            <Button Click="Show_In_Cleanlist">
+                            <Button x:Name="StatusInCleanlist" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelInCleanlist" Text="{DynamicResource InCleanlist}"/>
                                     <TextBlock x:Name="ValueInCleanlist" Text="0 / 20" HorizontalAlignment="Center"/>
@@ -92,7 +92,7 @@
 
                         <Border Grid.Row="1" Grid.Column="2"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0, 0, 0, 0">
-                            <Button Click="Show_In_Whitelist">
+                            <Button x:Name="StatusInWhitelist" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelInWhitelist" Text="{DynamicResource InWhitelist}"/>
                                     <TextBlock x:Name="ValueInWhitelist" Text="0" HorizontalAlignment="Center"/>
@@ -102,7 +102,7 @@
 
                         <Border Grid.Row="2" Grid.Column="0"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,-1">
-                            <Button Click="Show_Cleaned_Files">
+                            <Button x:Name="StatusCleanedFiles" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelCleanedFiles" Text="{DynamicResource CleandFiles}"/>
                                     <TextBlock x:Name="ValueCleanedFiles" Text="0" HorizontalAlignment="Center"/>
@@ -112,7 +112,7 @@
 
                         <Border Grid.Row="2" Grid.Column="1"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 1, 1" Margin="0,0,0,-1">
-                            <Button Click="Show_Clean_Times">
+                            <Button x:Name="StatusCleanTimes" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelCleanTimes" Text="{DynamicResource CleanTimes}"/>
                                     <TextBlock x:Name="ValueCleanTimes" Text="0" HorizontalAlignment="Center"/>
@@ -122,7 +122,7 @@
 
                         <Border Grid.Row="2" Grid.Column="2"
                                 BorderBrush="LightGray" BorderThickness="0, 0, 0, 1" Margin="0, 0, 0, -1">
-                            <Button Click="Show_Cleaned_Folders">
+                            <Button x:Name="StatusCleanedFolders" Click="Show_Status">
                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock x:Name="LabelCleanedFolders" Text="{DynamicResource CleanedFolders}"/>
                                     <TextBlock x:Name="ValueCleanedFolders" Text="0" HorizontalAlignment="Center"/>

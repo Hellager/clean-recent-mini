@@ -19,9 +19,9 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <RadioButton x:Name="MiniRadio" Content="{DynamicResource CloseOptionMinimize}" IsChecked="True" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <RadioButton x:Name="QuitRadio" Content="{DynamicResource CloseOptionExit}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <CheckBox x:Name="AskOption" Content="{DynamicResource CloseOptionRemember}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0"/>
+        <RadioButton x:Name="MinimizeRadio" Content="{DynamicResource CloseOptionMinimize}" IsChecked="True" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <RadioButton x:Name="ExitRadio" Content="{DynamicResource CloseOptionExit}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <CheckBox x:Name="RememberOption" Content="{DynamicResource CloseOptionRemember}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0"/>
         <Button x:Name="ConfirmButton" Content="{DynamicResource Confirm}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="On_ConfirmButton_Click" Height="28" Width="86"/>
         <Button x:Name="CancelButton" Content="{DynamicResource Cancel}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="On_CancelButton_Click" Height="28" Width="86"/>
     </Grid>

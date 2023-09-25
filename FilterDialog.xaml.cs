@@ -3,15 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using NLog;
 using NanoidDotNet;
 using Newtonsoft.Json;
@@ -29,26 +22,55 @@ namespace CleanRecentMini
     }
 
     /// <summary>
-    /// FilterDialog.xaml 的交互逻辑
+    /// Interaction logic for  FilterDialog.xaml
     /// </summary>
     public partial class FilterDialog : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Instance variable <c>dialogmode</c> <br /> 
+        /// Dertermine dialog window content.
+        /// </summary>
         private FilterlistDialogMode dialogmode = FilterlistDialogMode.EditTable;
+
+        /// <summary>
+        /// Instance variable <c>dialogTitle</c> <br /> 
+        /// Titles for dialog, dertermined by dialogmode
+        /// </summary>
         private static readonly List<string> dialogTitle = new List<string>()
         {
             "TitleAppendItem", "TitleEditItem", "TitleImportItems", "TitleExportItems", "TitleCleanItems"
         };
 
-        // About append item
+        /// <summary>
+        /// Instance variable <c>filterItem</c> <br /> 
+        /// Item for mode AppendTable
+        /// </summary>
         private FilterlistTableItem filterItem;
-        
-        // About import/export items
+
+        /// <summary>
+        /// Instance variable <c>transferList</c> <br /> 
+        /// List for mode ImportData or ExportData
+        /// </summary>
         private List<CleanFilterItem> transferList = new List<CleanFilterItem>();
+
+        /// <summary>
+        /// Instance variable <c>transferTableData</c> <br /> 
+        /// TableData for mode ImportData or ExportData
+        /// </summary>
         public ObservableCollection<FilterlistTableItem> transferTableData = new ObservableCollection<FilterlistTableItem>();
 
-        // About clean items;
+        /// <summary>
+        /// Instance variable <c>cleanList</c> <br /> 
+        /// List for mode CleanData
+        /// </summary>
         private List<string> cleanList = new List<string>();
+
+        /// <summary>
+        /// Instance variable <c>cleanTableData</c> <br /> 
+        /// TableData for mode CleanData
+        /// </summary>
         public ObservableCollection<CleanTableItem> cleanTableData = new ObservableCollection<CleanTableItem>();
 
         public FilterDialog()
@@ -56,6 +78,11 @@ namespace CleanRecentMini
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Set filterdialog mode
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> Dialog mode.</param>
         public void SetDialogMode(byte data)
         {
             this.dialogmode = (FilterlistDialogMode)data;
@@ -68,6 +95,11 @@ namespace CleanRecentMini
             this.FilterlistController.SelectedIndex = data / 2;
         }
 
+        /// <summary>
+        /// Set AppendTable or EditTable mode data
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> Filterlist table item data.</param>
         public void SetEditItemData(FilterlistTableItem data)
         {
             this.filterItem = data;
@@ -77,6 +109,11 @@ namespace CleanRecentMini
             this.GroupSelector.SelectedIndex = Convert.ToInt32(data.Group);
         }
 
+        /// <summary>
+        /// Set ImportData or ExportData mode data
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> ImportData or ExportData mode data.</param>
         public void SetTransferData(List<CleanFilterItem> data)
         {
             this.transferList = data;
@@ -84,6 +121,11 @@ namespace CleanRecentMini
             this.Refresh_Transfer_Table();
         }
 
+        /// <summary>
+        /// Set CleanData mode data
+        /// </summary>
+        /// (<paramref name="data"/>).
+        /// <param><c>data</c> CleanData mode data.</param>
         public void SetCleanData(List<string> data)
         {
             this.cleanList = data;
@@ -91,7 +133,9 @@ namespace CleanRecentMini
             this.Refresh_Transfer_Table();
         }
 
-
+        /// <summary>
+        /// Refresh transfer table
+        /// </summary>
         private void Refresh_Transfer_Table()
         {
             this.transferTableData.Clear();
@@ -114,6 +158,12 @@ namespace CleanRecentMini
             // No need to do something
         }
 
+        /// <summary>
+        /// Handle TransferTable checkbox click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Transfer_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             var CurCheckBox = sender as System.Windows.Controls.CheckBox;
@@ -151,6 +201,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle CleanTable checkbox click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Clean_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             var CurCheckBox = sender as System.Windows.Controls.CheckBox;
@@ -188,6 +244,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle ConfirmButton click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is MainWindow) as MainWindow;
@@ -405,6 +467,12 @@ namespace CleanRecentMini
 
         }
 
+        /// <summary>
+        /// Handle CancelButton click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.transferList.Clear();

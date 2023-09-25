@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using NLog;
 
 namespace CleanRecentMini
 {
     /// <summary>
-    /// CloseDialog.xaml 的交互逻辑
+    /// Interaction logic for CloseDialog.xaml
     /// </summary>
     public partial class CloseDialog : Window
     {
@@ -26,23 +15,34 @@ namespace CleanRecentMini
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Handle ConfirmButton click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is MainWindow) as MainWindow;
             mainWindow.closeDialogOkOrCancel = true;
-            mainWindow.closeRememberOption = this.AskOption.IsChecked.Value;
+            mainWindow.closeRememberOption = this.RememberOption.IsChecked.Value;
 
-            if (this.AskOption.IsChecked == true) // Remember Option
+            if (this.RememberOption.IsChecked == true)
             {
-                // 不再询问则视为使用默认设置
-                mainWindow.appConfig.close_option = this.MiniRadio.IsChecked.Value;
+                mainWindow.appConfig.close_option = this.MinimizeRadio.IsChecked.Value;
             }
 
-            mainWindow.closeOption = (byte)(this.MiniRadio.IsChecked.Value ? 1 : 0);
+            mainWindow.closeOption = (byte)(this.MinimizeRadio.IsChecked.Value ? 1 : 0);
 
             this.Close();
         }
 
+        /// <summary>
+        /// Handle CancelButton click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_CancelButton_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is MainWindow) as MainWindow;

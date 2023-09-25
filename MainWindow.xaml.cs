@@ -8,58 +8,103 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO;
+using System.Diagnostics;
 using NLog;
 using FramePFX.Themes;
 using Newtonsoft.Json;
 using QuickAccess;
 
-using System.Diagnostics;
 
 namespace CleanRecentMini
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        // Notify Icon
+        /// <summary>
+        /// Instance variable <c>notifyIcon</c> <br /> 
+        /// App notifyIcon.
+        /// </summary>
         private readonly System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
 
-        // Quick Access Handler
+        /// <summary>
+        /// Instance variable <c>quickAccessHandler</c> <br /> 
+        /// Handler for windows quick access.
+        /// </summary>
         private QuickAccessHandler quickAccessHandler = new QuickAccessHandler();
 
-        // Data Management
+        /// <summary>
+        /// Instance variable <c>appConfig</c> <br /> 
+        /// </summary>
         public AppConfig appConfig;
+
+        /// <summary>
+        /// Instance variable <c>cleanConfig</c> <br /> 
+        /// </summary>
         public CleanConfig cleanConfig;
+
+        /// <summary>
+        /// Instance variable <c>cleanHistory</c> <br /> 
+        /// </summary>
         public CleanHistory cleanHistory;
 
-        // Time Interval Trigger
+        /// <summary>
+        /// Instance variable <c>cleanIntervalTimer</c> <br /> 
+        /// Timer for clean in period.
+        /// </summary>
         System.Threading.Timer cleanIntervalTimer = null;
 
         // Monitor Trigger
+        /// <summary>
+        /// Instance variable <c>watcher</c> <br /> 
+        /// Monitor for windows quick access folder.
+        /// </summary>
         FileSystemWatcher watcher = null;
+
+        /// <summary>
+        /// Instance variable <c>watcherDebounceTimer</c> <br /> 
+        /// Debouncer timer for watcher.
+        /// </summary>
         System.Threading.Timer watcherDebounceTimer = null;
+
+        /// <summary>
+        /// Instance variable <c>debounceWatcherValid</c> <br /> 
+        /// </summary>
         bool debounceWatcherValid = true;
 
-        // Filter
+        /// <summary>
+        /// Instance variable <c>FilterlistTableData</c> <br /> 
+        /// Data for FilterlistTable
+        /// </summary>
         public ObservableCollection<FilterlistTableItem> FilterlistTableData = new ObservableCollection<FilterlistTableItem>();
 
-        // Close Dialog
-        public bool closeDialogOkOrCancel = false; // false for cancel, true for confirm
-        public bool closeRememberOption = false;
-        public byte closeOption = 0; // 0 for exit, 1 for minimize
+        /// <summary>
+        /// Instance variable <c>closeDialogOkOrCancel</c> <br /> 
+        /// False for close dialog canceled, true for close dialog confirmed
+        /// </summary>
+        public bool closeDialogOkOrCancel = false;
 
-        // Save data timer
+        /// <summary>
+        /// Instance variable <c>closeRememberOption</c> <br /> 
+        /// False for no remember option, true for remember.
+        /// </summary>
+        public bool closeRememberOption = false;
+
+        /// <summary>
+        /// Instance variable <c>closeOption</c> <br /> 
+        /// 0 for exit program, 1 for minimize to tray.
+        /// </summary>
+        public byte closeOption = 0;
+
+        /// <summary>
+        /// Instance variable <c>dataSaveTimer</c> <br /> 
+        /// Timer for save data in period.
+        /// </summary>
         System.Threading.Timer dataSaveTimer = null;
 
         public MainWindow()
@@ -72,6 +117,12 @@ namespace CleanRecentMini
             this.Start_Data_Save_Timer();
         }
 
+        /// <summary>
+        /// Handle window close event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Cancel event args.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Logger.Debug("Window Closing");
@@ -155,12 +206,24 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle window activate event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Event args.</param>
         private void Window_Activated(object sender, EventArgs e)
         {
             Logger.Debug("window get activated");
             this.Update_StatusMenu();
         }
 
+        /// <summary>
+        /// Handle window content rendered event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Event args.</param>
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             Logger.Debug("Window rendered content");
@@ -168,6 +231,14 @@ namespace CleanRecentMini
             this.Update_StatusMenu();
         }
 
+        /// <summary>
+        /// Get localed string from locale resource
+        /// </summary>
+        /// <returns>
+        /// Localed string if exists, else name itself.
+        /// </returns>
+        /// (<paramref name="name"/>).
+        /// <param><c>name</c> Locale name.</param>
         private string Get_Locale_From_Resource(string name)
         {
             ResourceDictionary resourceDictionary;
@@ -176,6 +247,12 @@ namespace CleanRecentMini
         }
 
         /******** Notify Icon ********/
+        /// <summary>
+        /// Handle notifyIcon menu item click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_WindowMenuItem_Clicked(object sender, EventArgs e)
         {
             if (this.Visibility == Visibility.Visible)
@@ -190,6 +267,12 @@ namespace CleanRecentMini
             this.Build_NotifyIcon_ContextMenu();
         }
 
+        /// <summary>
+        /// Handle notifyIcon exit menu item click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_ExitMenuItem_Clicked(object sender, EventArgs e)
         {
             Logger.Debug("Exit Program");
@@ -205,6 +288,9 @@ namespace CleanRecentMini
             return;
         }
 
+        /// <summary>
+        /// Build notifyIcon menu.
+        /// </summary>
         private void Build_NotifyIcon_ContextMenu()
         {
             ContextMenuStrip menuStrip = new ContextMenuStrip();
@@ -224,6 +310,9 @@ namespace CleanRecentMini
             this.notifyIcon.Text = Get_Locale_From_Resource("AppName");
         }
 
+        /// <summary>
+        /// Build notifyIcon .
+        /// </summary>
         private void Build_NotifyIcon()
         {
             System.Drawing.Icon _icon = new System.Drawing.Icon(System.Windows.Application.GetResourceStream(new Uri("/Assets/Icons/icon.ico", UriKind.Relative)).Stream);
@@ -237,6 +326,16 @@ namespace CleanRecentMini
         }
 
         /******** Data Management ********/
+        /// <summary>
+        /// Get project directory
+        /// </summary>
+        /// <returns>
+        /// Project directory in string.
+        /// </returns>
+        /// (<paramref name="qualifer"/>, <paramref name="organization"/>, <paramref name="application"/>).
+        /// <param><c>qualifer</c> Qualifer.</param>
+        /// <param><c>organization</c> Organization.</param>
+        /// /// <param><c>application</c> Application.</param>
         private string Get_Project_Dir(string qualifer = "dev", string organization = "", string application = "CleanRecent")
         {
             var systemPath = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -248,6 +347,14 @@ namespace CleanRecentMini
             return projectPath;
         }
 
+        /// <summary>
+        /// Get project data directory
+        /// </summary>
+        /// <returns>
+        /// Project data directory in string.
+        /// </returns>
+        /// (<paramref name="dataPath"/>).
+        /// <param><c>dataPath</c> Path for projcet data.</param>
         private string Get_Project_Data_Dir(string dataPath = "data")
         {
             var projectPath = this.Get_Project_Dir();
@@ -259,6 +366,14 @@ namespace CleanRecentMini
             return projectDataPath;
         }
 
+        /// <summary>
+        /// Get project config directory
+        /// </summary>
+        /// <returns>
+        /// Project config directory in string.
+        /// </returns>
+        /// (<paramref name="configPath"/>).
+        /// <param><c>dataPath</c> Path for projcet config.</param>
         private string Get_Project_Config_Dir(string configPath = "config")
         {
             var projectPath = this.Get_Project_Dir();
@@ -270,6 +385,12 @@ namespace CleanRecentMini
             return projectConfigPath;
         }
 
+        /// <summary>
+        /// Build default app config.
+        /// </summary>
+        /// <returns>
+        /// Default appc onfig data.
+        /// </returns>
         private AppConfig Build_Default_AppConfig()
         {
             var config = new AppConfig();
@@ -290,6 +411,12 @@ namespace CleanRecentMini
             return config;
         }
 
+        /// <summary>
+        /// Build default clean config.
+        /// </summary>
+        /// <returns>
+        /// Default clean config data.
+        /// </returns>
         private CleanConfig Build_Default_CleanConfig()
         {
             var config = new CleanConfig();
@@ -308,6 +435,12 @@ namespace CleanRecentMini
             return config;
         }
 
+        /// <summary>
+        /// Build default clean history.
+        /// </summary>
+        /// <returns>
+        /// Default clean history data.
+        /// </returns>
         private CleanHistory Build_Default_CleanHistory()
         {
             var history = new CleanHistory();
@@ -318,6 +451,9 @@ namespace CleanRecentMini
             return history;
         }
 
+        /// <summary>
+        /// Build default app data about app config, clean config and clean history.
+        /// </summary>
         public void Build_DefaultData()
         {
             this.appConfig = this.Build_Default_AppConfig();
@@ -325,6 +461,9 @@ namespace CleanRecentMini
             this.cleanHistory = this.Build_Default_CleanHistory();
         }
 
+        /// <summary>
+        /// Load app config data.
+        /// </summary>
         private void Load_AppConfig()
         {
             var project_config_dir = this.Get_Project_Config_Dir();
@@ -348,6 +487,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Save app config data.
+        /// </summary>
+        /// <returns>
+        /// False for failed save app config, true for success.
+        /// </returns>
         private bool Save_AppConfig()
         {
             var config_content = JsonConvert.SerializeObject(this.appConfig);
@@ -365,6 +510,9 @@ namespace CleanRecentMini
             return true;
         }
 
+        /// <summary>
+        /// Load clean config data.
+        /// </summary>
         private void Load_CleanConfig()
         {
             var project_config_dir = this.Get_Project_Config_Dir();
@@ -385,6 +533,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Save clean config data.
+        /// </summary>
+        /// <returns>
+        /// False for failed save clean config, true for success.
+        /// </returns>
         private bool Save_CleanConfig()
         {
             var config_content = JsonConvert.SerializeObject(this.cleanConfig);
@@ -401,6 +555,9 @@ namespace CleanRecentMini
             return true;
         }
 
+        /// <summary>
+        /// Load clean history data.
+        /// </summary>
         private void Load_CleanHistory()
         {
             var project_data_dir = this.Get_Project_Data_Dir();
@@ -421,6 +578,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Save clean history data.
+        /// </summary>
+         /// <returns>
+        /// False for failed save clean history, true for success.
+        /// </returns>
         private bool Save_CleanHistory()
         {
             var config_content = JsonConvert.SerializeObject(this.cleanHistory);
@@ -437,6 +600,9 @@ namespace CleanRecentMini
             return true;
         }
 
+        /// <summary>
+        /// Load app data about app config, clean config and clean history, if not exists, use default data.
+        /// </summary>
         private void Load_AppData()
         {
             this.Build_DefaultData();
@@ -445,6 +611,11 @@ namespace CleanRecentMini
             this.Load_CleanHistory();
         }
 
+        /// <summary>
+        /// Handle dataSaveTimer trigger event
+        /// </summary>
+        /// (<paramref name="state"/>).
+        /// <param><c>state</c> Timer state.</param>
         private void On_DataSaveTimer_Triggered(object state)
         {
             this.Save_AppConfig();
@@ -454,6 +625,9 @@ namespace CleanRecentMini
             Logger.Debug("Save app data");
         }
 
+        /// <summary>
+        /// Start dataSaveTimer to save data in period.
+        /// </summary>
         private void Start_Data_Save_Timer()
         {
             this.dataSaveTimer = new System.Threading.Timer(new TimerCallback(On_DataSaveTimer_Triggered), null, Timeout.Infinite, Timeout.Infinite);
@@ -464,6 +638,12 @@ namespace CleanRecentMini
 
 
         /******** Change Menu ********/
+        /// <summary>
+        /// Handle MenuStatus click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_MenuStatus_Click(object sender, RoutedEventArgs e)
         {
             Logger.Debug("Switch to status menu");
@@ -473,6 +653,12 @@ namespace CleanRecentMini
             this.ContainerController.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Handle MenuFilter click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_MenuFilter_Click(object sender, RoutedEventArgs e)
         {
             Logger.Debug("Switch to filter menu");
@@ -482,6 +668,12 @@ namespace CleanRecentMini
             this.ContainerController.SelectedIndex = 1;
         }
 
+        /// <summary>
+        /// Handle MenuConfig click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_MenuConfig_Click(object sender, RoutedEventArgs e)
         {
             Logger.Debug("Switch to config menu");
@@ -490,140 +682,49 @@ namespace CleanRecentMini
         }
 
         /************* About Status Menu ******************/
+        /// <summary>
+        /// Get current recent files in quick access.
+        /// </summary>
+        /// <returns>
+        /// Dictionary about recent files, key for path, value for name.
+        /// </returns>
         private Dictionary<string, string> Get_Cur_Recent_Files()
         {
             return this.quickAccessHandler.GetRecentFilesDict();
         }
 
+        /// <summary>
+        /// Get current frequent folders in quick access.
+        /// </summary>
+        /// <returns>
+        /// Dictionary about frequent folders, key for path, value for name.
+        /// </returns>
         private Dictionary<string, string> Get_Cur_Frequent_Folders()
         {
             return this.quickAccessHandler.GetFrequentFoldersDict();
         }
 
+        /// <summary>
+        /// Get all items in quick access.
+        /// </summary>
+        /// <returns>
+        /// Dictionary about quick access, key for path, value for name.
+        /// </returns>
         private Dictionary<string, string> Get_Cur_Quick_Access()
         {
             return this.quickAccessHandler.GetQuickAccessDict();
         }
 
-        private Dictionary<string, string> Get_Cur_In_Blacklist()
-        {
-            Dictionary<string, string> InBlacklist = new Dictionary<string, string>();
-
-            Dictionary<string, string> clean_source = new Dictionary<string, string>();
-            if (this.cleanConfig.clean_category == 1)
-            {
-                clean_source = this.Get_Cur_Frequent_Folders();
-            }
-            else if (this.cleanConfig.clean_category == 2)
-            {
-                clean_source = this.Get_Cur_Recent_Files();
-            }
-            else
-            {
-                clean_source = this.Get_Cur_Recent_Files();
-            }
-
-            foreach (var item in clean_source)
-            {
-                for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
-                {
-                    if (item.Key.Contains(this.cleanConfig.filter_list[j].keyword))
-                    {
-                        if (this.cleanConfig.filter_list[j].group == 0 &&
-                            this.cleanConfig.filter_list[j].state == true)
-                        {
-                            InBlacklist.Add(item.Key, item.Value);
-                        }
-                    }
-                }
-            }
-
-            return InBlacklist;
-        }
-
-        private Dictionary<string, string> Get_Cur_In_Whitelist()
-        {
-            Dictionary<string, string> InWhitelist = new Dictionary<string, string>();
-
-            Dictionary<string, string> clean_source = new Dictionary<string, string>();
-            if (this.cleanConfig.clean_category == 1)
-            {
-                clean_source = this.Get_Cur_Frequent_Folders();
-            }
-            else if (this.cleanConfig.clean_category == 2)
-            {
-                clean_source = this.Get_Cur_Recent_Files();
-            }
-            else
-            {
-                clean_source = this.Get_Cur_Recent_Files();
-            }
-
-            foreach (var item in clean_source)
-            {
-                for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
-                {
-                    if (item.Key.Contains(this.cleanConfig.filter_list[j].keyword))
-                    {
-                        if (this.cleanConfig.filter_list[j].group == 1 &&
-                            this.cleanConfig.filter_list[j].state == true)
-                        {
-                            InWhitelist.Add(item.Key, item.Value);
-                        }
-                    }
-                }
-            }
-
-            return InWhitelist;
-        }
-
-        private Dictionary<string, string> Get_Cur_In_Cleanlist()
-        {
-            Dictionary<string, string> InCleanlist = new Dictionary<string, string>();
-
-            Dictionary<string, string> clean_source = new Dictionary<string, string>();
-            if (this.cleanConfig.clean_category == 1)
-            {
-                clean_source = this.Get_Cur_Frequent_Folders();
-            }
-            else if (this.cleanConfig.clean_category == 2)
-            {
-                clean_source = this.Get_Cur_Recent_Files();
-            }
-            else
-            {
-                clean_source = this.Get_Cur_Recent_Files();
-            }
-
-            if (this.cleanConfig.clean_policy == 2)
-            {
-                InCleanlist = clean_source;
-            }
-            else
-            {
-                foreach (var item in clean_source)
-                {
-                    for (Int32 j = 0; j < this.cleanConfig.filter_list.Count; j++)
-                    {
-                        if (item.Key.Contains(this.cleanConfig.filter_list[j].keyword))
-                        {
-                            if (this.cleanConfig.filter_list[j].group == this.cleanConfig.clean_policy &&
-                                this.cleanConfig.filter_list[j].state == true)
-                            {
-                                InCleanlist.Add(item.Key, item.Value);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            return InCleanlist;
-        }
-
+        /// <summary>
+        /// Get current items in clean group list.
+        /// </summary>
+        /// <returns>
+        /// List for items in clean group list
+        /// </returns>
+        /// (<paramref name="group"/>).
+        /// <param><c>group</c> 0 for in cleanlist, 1 for in blacklist, 2 for in whitelist.</param>
         private List<CleanQuickAccessItem> Get_Cur_CleanQuickAccessItems(byte group)
         {
-            // group 0 for in cleanlist, 1 for in blacklist, 2 for in whitelist
             List<CleanQuickAccessItem> res = new List<CleanQuickAccessItem>();
 
             Dictionary<string, string> clean_source = new Dictionary<string, string>();
@@ -682,90 +783,52 @@ namespace CleanRecentMini
             return res;
         }
 
-        private void Show_Recent_Files(object sender, EventArgs e)
+        /// <summary>
+        /// Show status detail in dialog.
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
+        private void Show_Status(object sender, EventArgs e)
         {
-            var res = this.Get_Cur_Recent_Files();
+            List<string> menuStatus = new List<string>() { 
+                "StatusRecentFiles", "StatusQuickAccess", "StatusFrequentFolders",
+                "StatusInBlacklist", "StatusInCleanlist", "StatusInWhitelist",
+                "StatusCleanedFiles", "StatusCleanTimes", "StatusCleanedFolders"
+            };
+            List<Dictionary<string, string>> normalData = new List<Dictionary<string, string>>()
+            {
+                this.Get_Cur_Recent_Files(),
+                this.Get_Cur_Quick_Access(),
+                this.Get_Cur_Frequent_Folders()
+            };
+
+            string cur_status = (sender as System.Windows.Controls.Button).Name;
+            byte cur_status_idx = Convert.ToByte(menuStatus.IndexOf(cur_status));
+
+            Logger.Debug("Cur name " + cur_status + " idx: " + menuStatus.IndexOf(cur_status));
 
             StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(0);
-            dialog.SetShowNoramlData(res);
+            dialog.SetShowMode(cur_status_idx);
+            if (cur_status_idx < 3)
+            {
+                dialog.SetShowNoramlData(normalData[cur_status_idx]);
+            }
+            else if (cur_status_idx < 6)
+            {
+                dialog.SetShowFilterData(this.Get_Cur_CleanQuickAccessItems(Convert.ToByte(cur_status_idx - 3)));
+            }
+            else
+            {
+                dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
+            }
+            
             dialog.Show();
         }
 
-        private void Show_Frequent_Folders(object sender, EventArgs e)
-        {
-            var res = this.Get_Cur_Frequent_Folders();
-
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(2);
-            dialog.SetShowNoramlData(res);
-            dialog.Show();
-        }
-
-        private void Show_Quick_Access(object sender, EventArgs e)
-        {
-            var res = this.Get_Cur_Quick_Access();
-
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(1);
-            dialog.SetShowNoramlData(res);
-            dialog.Show();
-        }
-
-        private void Show_In_Blacklist(object sender, EventArgs e)
-        {
-            var res = this.Get_Cur_CleanQuickAccessItems(1);
-
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(3);
-            dialog.SetShowFilterData(res);
-            dialog.Show();
-        }
-
-        private void Show_In_Cleanlist(object sender, EventArgs e)
-        {
-            var res = this.Get_Cur_CleanQuickAccessItems(0);
-
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(4);
-            dialog.SetShowFilterData(res);
-            dialog.Show();
-        }
-
-        private void Show_In_Whitelist(object sender, EventArgs e)
-        {
-            var res = this.Get_Cur_CleanQuickAccessItems(2);
-
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(5);
-            dialog.SetShowFilterData(res);
-            dialog.Show();
-        }
-
-        private void Show_Cleaned_Files(object sender, EventArgs e)
-        {
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(6);
-            dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
-            dialog.Show();
-        }
-
-        private void Show_Clean_Times(object sender, EventArgs e)
-        {
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(7);
-            dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
-            dialog.Show();
-        }
-
-        private void Show_Cleaned_Folders(object sender, EventArgs e)
-        {
-            StatusDialog dialog = new StatusDialog();
-            dialog.SetShowMode(8);
-            dialog.SetShowCleanedData(this.cleanHistory.cleaned_data);
-            dialog.Show();
-        }
-
+        /// <summary>
+        /// Update quick access status.
+        /// </summary>
         private void Update_QuickAccess_Status()
         {
             this.ValueRecentFiles.Text = this.quickAccessHandler.GetRecentFilesList().Count.ToString();
@@ -773,6 +836,9 @@ namespace CleanRecentMini
             this.ValueFrequentFolders.Text = this.quickAccessHandler.GetFrequentFoldersList().Count.ToString();
         }
 
+        /// <summary>
+        /// Update filter status.
+        /// </summary>
         private void Update_Filter_Status()
         {
             this.ValueInBlacklist.Text = this.Get_Cur_CleanQuickAccessItems(1).Count.ToString();
@@ -780,6 +846,9 @@ namespace CleanRecentMini
             this.ValueInWhitelist.Text = this.Get_Cur_CleanQuickAccessItems(2).Count.ToString();
         }
 
+        /// <summary>
+        /// Update history status.
+        /// </summary>
         private void Update_History_Status()
         {
             Int32 cleaned_times = 0, cleaned_files = 0, cleaned_folders = 0;
@@ -801,6 +870,9 @@ namespace CleanRecentMini
             this.ValueCleanedFolders.Text = cleaned_folders.ToString();
         }
 
+        /// <summary>
+        /// Update status menu.
+        /// </summary>
         private void Update_StatusMenu()
         {
             this.Update_QuickAccess_Status();
@@ -809,6 +881,9 @@ namespace CleanRecentMini
         }
 
         /************* About Filter Menu ******************/
+        /// <summary>
+        /// Refresh FilterlistTable
+        /// </summary>
         public void Refresh_Filterlist_Table()
         {
             this.FilterlistTableData.Clear();
@@ -823,6 +898,12 @@ namespace CleanRecentMini
             this.FilterlistTable.Items.Refresh();
         }
 
+        /// <summary>
+        /// Handle FilterlistTable checkbox click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             var CurCheckBox = sender as System.Windows.Controls.CheckBox;
@@ -859,6 +940,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle filter search button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_SearchButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.FilterInputText.Text == "")
@@ -883,6 +970,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle filter append button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_AppendButton_Click(object sender, RoutedEventArgs e)
         {
             FilterDialog dialog = new FilterDialog();
@@ -892,6 +985,12 @@ namespace CleanRecentMini
             this.Refresh_Filterlist_Table();
         }
 
+        /// <summary>
+        /// Handle filter delete button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             List<string> toDeleteID = new List<string>();
@@ -913,6 +1012,12 @@ namespace CleanRecentMini
             this.Refresh_Filterlist_Table();
         }
 
+        /// <summary>
+        /// Handle filter import button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_ImportButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -947,6 +1052,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle filter export button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_ExportButton_Click(object sender, RoutedEventArgs e)
         {
             FilterDialog tranferDialog = new FilterDialog();
@@ -955,6 +1066,12 @@ namespace CleanRecentMini
             tranferDialog.ShowDialog();
         }
 
+        /// <summary>
+        /// Handle filter edit button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Filter_EditButton_Click(object sender, RoutedEventArgs e)
         {
             FilterlistTableItem edit_target = default;
@@ -980,6 +1097,13 @@ namespace CleanRecentMini
         /************* About Config Menu ******************/
 
         /********** About App Config ***************/
+
+        /// <summary>
+        /// Handle app config theme selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_Theme_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1018,6 +1142,12 @@ namespace CleanRecentMini
             Logger.Debug("Select change theme to: " + this.appConfig.dark_mode);
         }
 
+        /// <summary>
+        /// Handle app config language selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_Language_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1029,6 +1159,12 @@ namespace CleanRecentMini
             System.Windows.Application.Current.Resources.MergedDictionaries[3] = new ResourceDictionary() { Source = new Uri($"Locale/{this.appConfig.language}.xaml", UriKind.Relative) };
         }
 
+        /// <summary>
+        /// Handle app config auto start selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_Autostart_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1055,6 +1191,12 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle app config close option selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_Closeoption_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1064,6 +1206,12 @@ namespace CleanRecentMini
             this.appConfig.ask_close_option = true;
         }
 
+        /// <summary>
+        /// Handle version click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_Version_Link_Click(object sender, RoutedEventArgs e)
         {
            try
@@ -1077,6 +1225,12 @@ namespace CleanRecentMini
         }
 
         /********** About Clean Config ***************/
+        /// <summary>
+        /// Handle clean config action state selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_ActionState_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1154,7 +1308,7 @@ namespace CleanRecentMini
                         }
 
                         this.cleanIntervalTimer = new System.Threading.Timer(new TimerCallback(On_IntervalTimer_Triggered), null, Timeout.Infinite, Timeout.Infinite);
-                        this.cleanIntervalTimer.Change(TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(interval)); // 第一项决定 timer 时间，第二项决定 timeout 后下一次 timer 时间,相同时则为固定时间间隔触发
+                        this.cleanIntervalTimer.Change(TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(interval));
 
                         // this.interval_button.Content = "Stop Interval";
                         DateTime next_runtime = DateTime.Now.AddMinutes(interval);
@@ -1176,7 +1330,7 @@ namespace CleanRecentMini
                     this.watcher = new FileSystemWatcher();
                     // https://learn.microsoft.com/en-us/dotnet/api/system.environment.getfolderpath?view=net-7.0
                     watcher.Path = Environment.GetFolderPath(Environment.SpecialFolder.Recent);
-                    watcher.NotifyFilter = NotifyFilters.LastWrite; // 仅当向快速访问中添加新项时出现
+                    watcher.NotifyFilter = NotifyFilters.LastWrite; // trigger only new item added to quick access
                     watcher.Filter = "*.*";
                     watcher.Changed += On_Recent_QuickAccess_Changed;
                     watcher.EnableRaisingEvents = true;
@@ -1221,6 +1375,12 @@ namespace CleanRecentMini
             }));
         }
 
+        /// <summary>
+        /// Handle clean config clean method selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_CleanMethod_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1228,6 +1388,12 @@ namespace CleanRecentMini
             this.cleanConfig.clean_trigger = (byte)idx;
         }
 
+        /// <summary>
+        /// Handle clean config clean policy selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_CleanPolicy_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1235,6 +1401,12 @@ namespace CleanRecentMini
             this.cleanConfig.clean_policy = (byte)idx;
         }
 
+        /// <summary>
+        /// Handle clean config clean category selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_CleanCategory_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1242,6 +1414,12 @@ namespace CleanRecentMini
             this.cleanConfig.clean_category = (byte)idx;
         }
 
+        /// <summary>
+        /// Handle clean config clean interval selection change event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Select changed event args.</param>
         private void On_CleanInterval_Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             int idx = (sender as System.Windows.Controls.ComboBox).SelectedIndex;
@@ -1278,6 +1456,11 @@ namespace CleanRecentMini
         }
 
         /********** About Clean Quick Access ***************/
+        /// <summary>
+        /// Handle watcher debouncer timer trigger event
+        /// </summary>
+        /// (<paramref name="state"/>).
+        /// <param><c>state</c> Timer state.</param>
         private void On_WatcherDebouncerTimer_Trigger(object state)
         {
             this.debounceWatcherValid = true;
@@ -1285,6 +1468,12 @@ namespace CleanRecentMini
             Logger.Debug("Water timer triggered");
         }
 
+        /// <summary>
+        /// Handle change event in windows quick access
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> File system event args.</param>
         private void On_Recent_QuickAccess_Changed(object source, FileSystemEventArgs eventArgs)
         {
             if (source == null) return;
@@ -1320,6 +1509,11 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle clean interval timer trigger event
+        /// </summary>
+        /// (<paramref name="state"/>).
+        /// <param><c>state</c> Timer state.</param>
         private void On_IntervalTimer_Triggered(object state)
         {
             if (this.cleanConfig.clean_state == 2)
@@ -1339,6 +1533,12 @@ namespace CleanRecentMini
             Logger.Debug("Interval timer timout");
         }
 
+        /// <summary>
+        /// Handle manual clean button click event
+        /// </summary>
+        /// (<paramref name="sender"/>, <paramref name="e"/>).
+        /// <param><c>sender</c> Event sender.</param>
+        /// <param><c>e</c> Route event args.</param>
         private void On_ManualClean_Button_Clicked(object sender, RoutedEventArgs e)
         {
             Logger.Debug("manual clean");
@@ -1400,6 +1600,9 @@ namespace CleanRecentMini
             }
         }
 
+        /// <summary>
+        /// Handle clean quick access event
+        /// </summary>
         private void Handle_Clean_QuickAccess()
         {
             List<CleanQuickAccessItem> to_clean_list = this.Get_Cur_CleanQuickAccessItems(0);

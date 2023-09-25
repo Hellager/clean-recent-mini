@@ -28,16 +28,16 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Content="{DynamicResource TitleKeyword}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBox x:Name="KeywordInput" Text="Filter Keyword" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox x:Name="KeywordInput" Text="Filter Keyword" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="25"/>
 
                     <Label Content="{DynamicResource TitleState}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <ComboBox x:Name="StateSelector"  SelectedIndex="0"  Grid.Row="1" Grid.Column="1" SelectionChanged="On_Item_State_Selection_Changed" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ComboBox x:Name="StateSelector"  SelectedIndex="0"  Grid.Row="1" Grid.Column="1" SelectionChanged="On_Item_State_Selection_Changed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="98" Height="25">
                         <ComboBoxItem Content="{DynamicResource Disabled}" />
                         <ComboBoxItem Content="{DynamicResource Enabled}" />
                     </ComboBox>
 
                     <Label Content="{DynamicResource TitleGroup}" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <ComboBox x:Name="GroupSelector"  SelectedIndex="0"  Grid.Row="2" Grid.Column="1" SelectionChanged="On_Item_Group_Selection_Changed" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ComboBox x:Name="GroupSelector"  SelectedIndex="0"  Grid.Row="2" Grid.Column="1" SelectionChanged="On_Item_Group_Selection_Changed" HorizontalAlignment="Center" VerticalAlignment="Center" Width="96" Height="25">
                         <ComboBoxItem Content="{DynamicResource Cleanlist}" />
                         <ComboBoxItem Content="{DynamicResource Blacklist}" />
                         <ComboBoxItem Content="{DynamicResource Whitelist}" />
@@ -81,11 +81,11 @@
             <TabItem Header="Clean" Visibility="Collapsed">
                 <Grid x:Name="CleanGrid">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
+                        <!--<RowDefinition Height="30"/>-->
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Total 20 items to clean, 0 items selected" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <!--<TextBlock Grid.Row="0" Text="Total 20 items to clean, 0 items selected" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
 
                     <DataGrid x:Name="CleanTable" Grid.Row="1" ItemsSource="{Binding}" SelectionUnit="FullRow" AutoGenerateColumns="False" CanUserAddRows="False">
                         <DataGrid.Columns>

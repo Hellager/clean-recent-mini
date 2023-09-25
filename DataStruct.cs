@@ -5,16 +5,22 @@ using System.Windows;
 
 namespace CleanRecentMini
 {
+    /// <summary>
+    /// Struct <c>CleanFilterItemLabel</c> <br /> 
+    /// </summary>
     public struct CleanFilterItemLabel
     {
         public string key;
         public string name;
     }
 
+    /// <summary>
+    /// Struct <c>CleanFilterItem</c> <br /> 
+    /// </summary>
     public struct CleanFilterItem
     {
         public string id;
-        public byte group; // 0 for cleanlist, 1 for blacklist, 2 for whitelist
+        public byte group; // 0 for cleanlist(no matter CleanConfig.clean_policy), 1 for blacklist, 2 for whitelist
         public byte category; // 0 for quick access, 1 for frequent folder, 2 for recent file
         public bool state; // 0 for disabled, 1 for enabled
         public string keyword;
@@ -25,6 +31,9 @@ namespace CleanRecentMini
         public List<CleanFilterItemLabel> labels;
     }
 
+    /// <summary>
+    /// Struct <c>CleanedSnapshotItem</c> <br /> 
+    /// </summary>
     public struct CleanedSnapshotItem
     {
         public Int64 cleaned_at;
@@ -33,6 +42,9 @@ namespace CleanRecentMini
         public List<string> cleaned_folders;
     }
 
+    /// <summary>
+    /// Struct <c>CleanQuickAccessItem</c> <br /> 
+    /// </summary>
     public struct CleanQuickAccessItem
     {
         public string name;
@@ -43,6 +55,9 @@ namespace CleanRecentMini
         public Int64 cleaned_at;
     }
 
+    /// <summary>
+    /// Struct <c>AppConfig</c> <br /> 
+    /// </summary>
     public struct AppConfig
     {
         public Int64 start_time;
@@ -50,7 +65,7 @@ namespace CleanRecentMini
         public Int64 run_time;
         public bool dark_mode; // 0 for light, 1 for dark
         public bool auto_start; // 0 for disabled, 1 for enabled
-        public bool close_option; // 0 for minimize to tray, 1 for quit program
+        public bool close_option; // 0 for minimize to tray, 1 for exit program
         public ushort close_trigger_count;
         public bool ask_close_option; // 0 for no asking close option, 1 for asking
         public ushort reask_close_count;
@@ -60,6 +75,9 @@ namespace CleanRecentMini
         public string version;
     }
 
+    /// <summary>
+    /// Struct <c>CleanConfig</c> <br /> 
+    /// </summary>
     public struct CleanConfig
     {
         public bool is_monitor_running;
@@ -75,6 +93,9 @@ namespace CleanRecentMini
         public List<string> menu_names; // to support unsupported ui system
     }
 
+    /// <summary>
+    /// Struct <c>CleanHistory</c> <br /> 
+    /// </summary>
     public struct CleanHistory
     {
         public ushort clean_snapshots_max;
@@ -82,11 +103,17 @@ namespace CleanRecentMini
         public List<CleanQuickAccessItem> cleaned_data;
     }
 
+    /// <summary>
+    /// Struct <c>ExportFilterList</c> <br /> 
+    /// </summary>
     public struct ExportFilterList
     {
         public List<CleanFilterItem> filter_list;
     }
 
+    /// <summary>
+    /// Struct <c>FilterlistTableItem</c> <br /> 
+    /// </summary>
     public class FilterlistTableItem : INotifyPropertyChanged
     {
         private string id { get; set; }
@@ -231,6 +258,9 @@ namespace CleanRecentMini
         }
     }
 
+    /// <summary>
+    /// Struct <c>CleanTableItem</c> <br /> 
+    /// </summary>
     public class CleanTableItem : INotifyPropertyChanged
     {
         private string id { get; set; }
@@ -273,12 +303,18 @@ namespace CleanRecentMini
         }
     }
 
+    /// <summary>
+    /// Struct <c>StatusTableNormalItem</c> <br /> 
+    /// </summary>
     public class StatusTableNormalItem
     {
         public string Name { get; set; }
         public string Path { get; set; }
     }
 
+    /// <summary>
+    /// Struct <c>StatusTableFilterItem</c> <br /> 
+    /// </summary>
     public class StatusTableFilterItem
     {
         public string Name { get; set; }
@@ -286,6 +322,9 @@ namespace CleanRecentMini
         public string Keywords { get; set; }
     }
 
+    /// <summary>
+    /// Struct <c>StatusTableCleanedItem</c> <br /> 
+    /// </summary>
     public class StatusTableCleanedItem
     {
         public string Path { get; set; }
@@ -293,6 +332,9 @@ namespace CleanRecentMini
         public string Keyword { get; set; }
     }
 
+    /// <summary>
+    /// Struct <c>StatusTableCleanedTimesItem</c> <br /> 
+    /// </summary>
     public class StatusTableCleanedTimesItem
     {
         public string Files { get; set; }
