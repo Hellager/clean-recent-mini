@@ -750,12 +750,12 @@ namespace CleanRecentMini
 
 
             string[] clean_source_key_arr = clean_source.Keys.ToArray();
-            for(int i = 0; i < clean_source_key_arr.Length; i++)
+            foreach (KeyValuePair<string, string> kv in clean_source)
             {
                 bool isTarget = false;
                 CleanQuickAccessItem item = new CleanQuickAccessItem();
-                item.name = clean_source[clean_source_key_arr[i]];
-                item.path = clean_source_key_arr[i];
+                item.name = kv.Value;
+                item.path = kv.Key;
                 item.item_type = 0; // Set when clean
                 item.cleaned_policy = 0; // Set when clean
                 item.cleaned_at = 0; // Set when clean
@@ -764,12 +764,38 @@ namespace CleanRecentMini
                 item.keywords = new List<string>();
                 Parallel.ForEach(this.cleanConfig.filter_list, filter =>
                 {
-                    if (item.path.Contains(filter.keyword))
+                    if (group > 0)
                     {
-                        if ((group == filter.group && filter.state == true) || (this.cleanConfig.clean_policy == 0 && group == 0))
+                        // Check quick access item in blacklist or whitelist
+                        if(item.path.Contains(filter.keyword) && (group == filter.group) && (filter.state == true))
                         {
                             isTarget = true;
                             item.keywords.Add(filter.keyword);
+                        }
+                    } 
+                    else
+                    {
+                        if (this.cleanConfig.clean_policy == 0)
+                        {
+                            // Empty current quick access
+                            isTarget = true;
+                        }
+                        else if (this.cleanConfig.clean_policy == 1)
+                        {
+                            // Clean blacklist
+                            if(item.path.Contains(filter.keyword) && (group == filter.group || group == 0) && (filter.state == true))
+                            {
+                                isTarget = true;
+                                item.keywords.Add(filter.keyword);
+                            }
+                        }
+                        else if (this.cleanConfig.clean_policy == 2)
+                        {
+                            // Keep whitelist, get items in whitelist first, revert later
+                            if (item.path.Contains(filter.keyword) && (filter.group == 2) && (filter.state == true))
+                            {
+                                isTarget = true;
+                            }
                         }
                     }
                 });
@@ -777,6 +803,33 @@ namespace CleanRecentMini
                 if (isTarget)
                 {
                     res.Add(item);
+                }
+            }
+
+            if (group == 0 && this.cleanConfig.clean_policy == 2)
+            {
+                // When keep whitelist, revert items to get the actual to clean items
+                List<string> curWhitelistPaths = new List<string>();
+                for (int i = 0; i < res.Count; i++)
+                {
+                    curWhitelistPaths.Add(res[i].path);
+                }
+
+                res.Clear();
+                foreach(KeyValuePair<string, string> kv in clean_source)
+                {
+                    CleanQuickAccessItem item = new CleanQuickAccessItem();
+                    item.name = kv.Value;
+                    item.path = kv.Key;
+                    item.item_type = 0; // Set when clean
+                    item.cleaned_policy = 0; // Set when clean
+                    item.cleaned_at = 0; // Set when clean
+                    item.keywords = new List<string>();
+
+                    if (!curWhitelistPaths.Contains(kv.Key))
+                    {
+                        res.Add(item);
+                    }
                 }
             }
 

@@ -99,7 +99,7 @@ namespace CleanRecentMini
 
             foreach(CleanQuickAccessItem item in data)
             {
-                if (item.type == 1)
+                if (item.item_type == 1)
                 {
                     if (!cleaned_data.ContainsKey(item.cleaned_at))
                     {
@@ -115,7 +115,7 @@ namespace CleanRecentMini
                         cleaned_data[item.cleaned_at] = curHistoryList;
                     }
                 }
-                else if (item.type == 2)
+                else if (item.item_type == 2)
                 {
                     if (!cleaned_data.ContainsKey(item.cleaned_at))
                     {
