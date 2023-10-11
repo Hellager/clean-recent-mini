@@ -49,7 +49,7 @@ namespace CleanRecentMini
     {
         public string name;
         public string path;
-        public byte type;// 0 for unspecific, 1 for frequent folders, 2 for recent files
+        public byte item_type;// 0 for unspecific, 1 for frequent folders, 2 for recent files
         public List<string> keywords;
         public byte cleaned_policy; // 0 for empty, 1 for clean blacklist, 2 for keep whitelist
         public Int64 cleaned_at;
@@ -101,6 +101,9 @@ namespace CleanRecentMini
         public ushort clean_snapshots_max;
         public List<CleanedSnapshotItem> clean_snapshots;
         public List<CleanQuickAccessItem> cleaned_data;
+        public Int64 clean_times;
+        public Int64 cleaned_folders_cnt;
+        public Int64 cleaned_files_cnt;
     }
 
     /// <summary>

@@ -756,7 +756,7 @@ namespace CleanRecentMini
                 CleanQuickAccessItem item = new CleanQuickAccessItem();
                 item.name = clean_source[clean_source_key_arr[i]];
                 item.path = clean_source_key_arr[i];
-                item.type = 0; // Set when clean
+                item.item_type = 0; // Set when clean
                 item.cleaned_policy = 0; // Set when clean
                 item.cleaned_at = 0; // Set when clean
 
@@ -851,23 +851,9 @@ namespace CleanRecentMini
         /// </summary>
         private void Update_History_Status()
         {
-            Int32 cleaned_times = 0, cleaned_files = 0, cleaned_folders = 0;
-            cleaned_times = this.cleanHistory.cleaned_data.Count;
-            foreach (CleanQuickAccessItem item in this.cleanHistory.cleaned_data)
-            {
-                if (item.type == 1)
-                {
-                    cleaned_folders += 1;
-                } 
-                else if (item.type == 2)
-                {
-                    cleaned_files += 1;
-                }
-            }
-
-            this.ValueCleanedFiles.Text = cleaned_files.ToString();
-            this.ValueCleanTimes.Text = cleaned_times.ToString();
-            this.ValueCleanedFolders.Text = cleaned_folders.ToString();
+            this.ValueCleanedFiles.Text = this.cleanHistory.cleaned_files_cnt.ToString();
+            this.ValueCleanTimes.Text = this.cleanHistory.clean_times.ToString();
+            this.ValueCleanedFolders.Text = this.cleanHistory.cleaned_folders_cnt.ToString();
         }
 
         /// <summary>
@@ -1656,9 +1642,9 @@ namespace CleanRecentMini
                 bool isFrequentFolders = inFrequentFolders && !isUnSpecific && !inRecentFiles;
                 bool isRecentFiles = inRecentFiles && !isUnSpecific && !inFrequentFolders;
 
-                if (isUnSpecific) item.type = 0;
-                if (isFrequentFolders) item.type = 1;
-                if (isRecentFiles) item.type = 2;
+                if (isUnSpecific) item.item_type = 0;
+                if (isFrequentFolders) item.item_type = 1;
+                if (isRecentFiles) item.item_type = 2;
 
                 after_clean_list.Add(item);
             }
@@ -1679,10 +1665,24 @@ namespace CleanRecentMini
                 cleaned_files = before_recent_files,
             });
 
+            Int64 cur_cleaned_files_cnt = 0;
+            Int64 cur_cleaned_folders_cnt = 0;
             foreach(CleanQuickAccessItem item in after_clean_list)
             {
                 this.cleanHistory.cleaned_data.Add(item);
+
+                if(item.item_type == 1)
+                {
+                    cur_cleaned_folders_cnt += 1;
+                } else if (item.item_type == 2)
+                {
+                    cur_cleaned_files_cnt += 1;
+                }
             }
+
+            this.cleanHistory.clean_times += 1;
+            this.cleanHistory.cleaned_files_cnt += cur_cleaned_files_cnt;
+            this.cleanHistory.cleaned_folders_cnt += cur_cleaned_folders_cnt;
 
             this.Save_CleanHistory();
 
