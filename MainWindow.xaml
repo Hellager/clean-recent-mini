@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CleanRecentMini"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Clean Recent Mini" Height="143" Width="232">
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock Text="程序已最小化到系统托盘" HorizontalAlignment="Center" Margin="10"/>
+        <TextBlock Text="右键点击托盘图标进行设置" HorizontalAlignment="Center" Margin="10"/>
+    </StackPanel>
 </Window>
