@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 using Application = System.Windows.Application;
 using NotifyIcon = System.Windows.Forms.NotifyIcon;
 
@@ -15,136 +16,194 @@ namespace CleanRecentMini
     /// </summary>
     public partial class MainWindow : Window
     {
-        private NotifyIcon _notifyIcon;
-        private FileSystemWatcher _watcher;
-        private AppSettings _settings;
-        private const string SettingsPath = "settings.json";
+        private NotifyIcon trayIcon;
+        private Config config;
+        private FileSystemWatcher automaticDestinationsWatcher;
+        private const string FOLDERS_APPID = "f01b4d95cf55d32a";
+        private const string RECENT_FILES_APPID = "5f7b5f1e01b83767";
+
         public MainWindow()
         {
+            LoadConfig();
+            InitializeLanguage();
             InitializeComponent();
-            LoadSettings();
             InitializeTrayIcon();
-            InitializeFileWatcher();
-            Hide(); // 初始隐藏窗口
-        }
-        private void LoadSettings()
-        {
-            try
+            if (config.IncognitoMode)
             {
-                if (File.Exists(SettingsPath))
+                StartWatching();
+            }
+        }
+
+        private void InitializeLanguage()
+        {
+            var culture = new CultureInfo(config.Language);
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            Properties.Resources.Culture = culture;
+        }
+
+        private void InitializeTrayIcon()
+        {
+            trayIcon = new NotifyIcon
+            {
+                Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                Visible = true
+            };
+
+            var contextMenu = new ContextMenuStrip();
+            var autoStartItem = new ToolStripMenuItem(
+                Properties.Resources.AutoStart,
+                null, OnAutoStartClick)
+            {
+                Checked = config.AutoStart,
+                CheckOnClick = true
+            };
+            var IncognitoModeItem = new ToolStripMenuItem(
+                Properties.Resources.IncognitoMode,
+                null, OnIncognitoModeClick)
+            {
+                Checked = config.IncognitoMode,
+                CheckOnClick = true
+            };
+            var exitItem = new ToolStripMenuItem(
+                Properties.Resources.Exit,
+                null, OnExitClick);
+
+            contextMenu.Items.AddRange(new ToolStripItem[]
+            {
+                autoStartItem,
+                IncognitoModeItem,
+                new ToolStripSeparator(),
+                exitItem
+            });
+
+            trayIcon.ContextMenuStrip = contextMenu;
+        }
+
+        private void LoadConfig()
+        {
+            config = Config.Load();
+            UpdateAutoStart(config.AutoStart);
+        }
+
+        private void OnAutoStartClick(object sender, EventArgs e)
+        {
+            var menuItem = sender as ToolStripMenuItem;
+            config.AutoStart = menuItem.Checked;
+            UpdateAutoStart(config.AutoStart);
+            Config.Save(config);
+        }
+
+        private void OnIncognitoModeClick(object sender, EventArgs e)
+        {
+            var menuItem = sender as ToolStripMenuItem;
+            config.IncognitoMode = menuItem.Checked;
+            Config.Save(config);
+
+            if (config.IncognitoMode)
+            {
+                StartWatching();
+            }
+            else
+            {
+                StopWatching();
+            }
+        }
+
+        private void OnExitClick(object sender, EventArgs e)
+        {
+            trayIcon.Visible = false;
+            trayIcon.Dispose();
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void UpdateAutoStart(bool enable)
+        {
+            string appName = "CleanRecentMini";
+            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                if (enable)
                 {
-                    _settings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(SettingsPath));
+                    key.SetValue(appName, appPath);
                 }
                 else
                 {
-                    _settings = new AppSettings();
-                    SaveSettings();
+                    key.DeleteValue(appName, false);
                 }
             }
-            catch
-            {
-                _settings = new AppSettings();
-            }
-            SetStartup(_settings.IsStartupEnabled);
         }
-        private void SaveSettings()
+
+        private void StartWatching()
         {
-            File.WriteAllText(SettingsPath, JsonConvert.SerializeObject(_settings));
-        }
-        private void InitializeTrayIcon()
-        {
-            _notifyIcon = new NotifyIcon
+            if (automaticDestinationsWatcher != null) return;
+
+            string automaticDestPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                @"Microsoft\Windows\Recent\AutomaticDestinations");
+
+            // 监控 AutomaticDestinations 文件夹
+            automaticDestinationsWatcher = new FileSystemWatcher
             {
-                Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("/Assets/icon.ico", UriKind.Relative)).Stream),
-                Visible = true,
-                ContextMenu = new ContextMenu()
-            };
-            var stealthItem = new MenuItem("无痕模式", ToggleStealthMode)
-            {
-                Checked = _settings.IsStealthModeEnabled
+                Path = automaticDestPath,
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
+                Filter = "*.automaticDestinations-ms"
             };
 
-            var startupItem = new MenuItem("开机自启动", ToggleStartup)
-            {
-                Checked = _settings.IsStartupEnabled
-            };
-            var exitItem = new MenuItem("退出", ExitApplication);
-            _notifyIcon.ContextMenu.MenuItems.Add(stealthItem);
-            _notifyIcon.ContextMenu.MenuItems.Add(startupItem);
-            _notifyIcon.ContextMenu.MenuItems.Add(exitItem);
+            automaticDestinationsWatcher.Changed += OnAutomaticDestinationsChanged;
+            //automaticDestinationsWatcher.Created += OnAutomaticDestinationsChanged;
+            automaticDestinationsWatcher.EnableRaisingEvents = true;
         }
-        private void InitializeFileWatcher()
+
+        private void StopWatching()
         {
-            if (_settings.IsStealthModeEnabled)
+            if (automaticDestinationsWatcher != null)
             {
-                _watcher = new FileSystemWatcher
+                automaticDestinationsWatcher.EnableRaisingEvents = false;
+                automaticDestinationsWatcher.Dispose();
+                automaticDestinationsWatcher = null;
+            }
+        }
+
+        private void OnAutomaticDestinationsChanged(object sender, FileSystemEventArgs e)
+        {
+            try
+            {
+                // 防止重复触发
+                Thread.Sleep(100);
+
+                string fileName = Path.GetFileNameWithoutExtension(e.Name);
+                if (string.IsNullOrEmpty(fileName)) return;
+
+                // 移除文件扩展名部分
+                fileName = fileName.Replace(".automaticDestinations", "");
+
+                switch (fileName.ToLower())
                 {
-                    Path = Environment.GetFolderPath(Environment.SpecialFolder.Recent),
-                    Filter = "*.automaticDestinations-ms",
-                    NotifyFilter = NotifyFilters.LastWrite,
-                    EnableRaisingEvents = true
-                };
-                _watcher.Changed += OnFileChanged;
-            }
-        }
-        private void OnFileChanged(object sender, FileSystemEventArgs e)
-        {
-            Console.WriteLine($"[{DateTime.Now}] 检测到快速访问变更: {e.FullPath}");
-        }
-        private void ToggleStealthMode(object sender, EventArgs e)
-        {
-            _settings.IsStealthModeEnabled = !_settings.IsStealthModeEnabled;
-            ((MenuItem)sender).Checked = _settings.IsStealthModeEnabled;
-            if (_settings.IsStealthModeEnabled)
-            {
-                InitializeFileWatcher();
-            }
-            else
-            {
-                _watcher?.Dispose();
-                _watcher = null;
-            }
-            SaveSettings();
-        }
-        private void ToggleStartup(object sender, EventArgs e)
-        {
-            _settings.IsStartupEnabled = !_settings.IsStartupEnabled;
-            ((MenuItem)sender).Checked = _settings.IsStartupEnabled;
-            SetStartup(_settings.IsStartupEnabled);
-            SaveSettings();
-        }
-        private void SetStartup(bool enable)
-        {
-            const string appName = "StealthApp";
-            var registryKey = Registry.CurrentUser.OpenSubKey(
-                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            if (enable)
-            {
-                registryKey?.SetValue(appName, System.Windows.Forms.Application.ExecutablePath);
-            }
-            else
-            {
-                registryKey?.DeleteValue(appName, false);
-            }
-        }
-        private void ExitApplication(object sender, EventArgs e)
-        {
-            _notifyIcon.Dispose();
-            _watcher?.Dispose();
-            Application.Current.Shutdown();
-        }
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true; // 阻止窗口关闭
-            Hide();         // 最小化到托盘
-            base.OnClosing(e);
-        }
-    }
-    // AppSettings.cs
-    public class AppSettings
-    {
-        public bool IsStealthModeEnabled { get; set; } = false;
-        public bool IsStartupEnabled { get; set; } = false;
-    }
+                    case FOLDERS_APPID:
+                        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Frequently used folders changed");
+                        // 这里可以添加解析文件内容的代码来获取具体的文件夹路径
+                        break;
 
+                    case RECENT_FILES_APPID:
+                        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Recent files changed");
+                        // 这里可以添加解析文件内容的代码来获取具体的文件路径
+                        break;
+
+                    default:
+                        Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Other AutomaticDestinations file changed: {fileName}");
+                        break;
+                }
+
+                Console.WriteLine($"Change type: {e.ChangeType}");
+                Console.WriteLine($"Full path: {e.FullPath}");
+                Console.WriteLine("----------------------------------------");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Error processing AutomaticDestinations change: {ex.Message}");
+            }
+        }
+    }
 }
