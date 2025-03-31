@@ -62,7 +62,7 @@ namespace CleanRecentMini
                 Checked = config.AutoStart,
                 CheckOnClick = true
             };
-            var IncognitoModeItem = new ToolStripMenuItem(
+            var incognitoModeItem = new ToolStripMenuItem(
                 Properties.Resources.IncognitoMode,
                 null, OnIncognitoModeClick)
             {
@@ -84,6 +84,10 @@ namespace CleanRecentMini
                 languageItems[lang.Code] = langItem;
             }
 
+            var aboutItem = new ToolStripMenuItem(
+                Properties.Resources.About,
+                null, OnAboutClick);
+
             var exitItem = new ToolStripMenuItem(
                 Properties.Resources.Exit,
                 null, OnExitClick);
@@ -91,8 +95,10 @@ namespace CleanRecentMini
             contextMenu.Items.AddRange(new ToolStripItem[]
             {
                 autoStartItem,
-                IncognitoModeItem,
+                incognitoModeItem,
+                new ToolStripSeparator(),
                 languageMenu,
+                aboutItem,
                 new ToolStripSeparator(),
                 exitItem
             });
@@ -131,10 +137,13 @@ namespace CleanRecentMini
                 if (contextMenu.Items[1] is ToolStripMenuItem incognitoModeItem)
                     incognitoModeItem.Text = Properties.Resources.IncognitoMode;
 
-                if (contextMenu.Items[2] is ToolStripMenuItem languageMenuItem)
+                if (contextMenu.Items[3] is ToolStripMenuItem languageMenuItem)
                     languageMenuItem.Text = Properties.Resources.Language;
 
-                if (contextMenu.Items[4] is ToolStripMenuItem exitItem)
+                if (contextMenu.Items[4] is ToolStripMenuItem aboutItem)
+                    aboutItem.Text = Properties.Resources.About;
+
+                if (contextMenu.Items[6] is ToolStripMenuItem exitItem)
                     exitItem.Text = Properties.Resources.Exit;
             }
         }
@@ -167,6 +176,12 @@ namespace CleanRecentMini
             {
                 StopWatching();
             }
+        }
+
+        private void OnAboutClick(object sender, EventArgs e)
+        {
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.ShowDialog();
         }
 
         private void OnExitClick(object sender, EventArgs e)

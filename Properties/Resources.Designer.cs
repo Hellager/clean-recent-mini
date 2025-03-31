@@ -22,7 +22,7 @@ namespace CleanRecentMini.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace CleanRecentMini.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanRecentMini.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace CleanRecentMini.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
-        internal static string About {
+        public static string About {
             get {
                 return ResourceManager.GetString("About", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to CleanRecentMini is a lightweight tool that helps you manage Windows Quick Access items and protect your privacy..
         /// </summary>
-        internal static string AboutDescription {
+        public static string AboutDescription {
             get {
                 return ResourceManager.GetString("AboutDescription", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to All rights reserved..
         /// </summary>
-        internal static string AllRightsReserved {
+        public static string AllRightsReserved {
             get {
                 return ResourceManager.GetString("AllRightsReserved", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Auto Start.
         /// </summary>
-        internal static string AutoStart {
+        public static string AutoStart {
             get {
                 return ResourceManager.GetString("AutoStart", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Developed by.
         /// </summary>
-        internal static string DevelopedBy {
+        public static string DevelopedBy {
             get {
                 return ResourceManager.GetString("DevelopedBy", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
-        internal static string Exit {
+        public static string Exit {
             get {
                 return ResourceManager.GetString("Exit", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Incognito Mode.
         /// </summary>
-        internal static string IncognitoMode {
+        public static string IncognitoMode {
             get {
                 return ResourceManager.GetString("IncognitoMode", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
-        internal static string Language {
+        public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to License.
         /// </summary>
-        internal static string License {
+        public static string License {
             get {
                 return ResourceManager.GetString("License", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace CleanRecentMini.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Project Page.
         /// </summary>
-        internal static string ProjectPage {
+        public static string ProjectPage {
             get {
                 return ResourceManager.GetString("ProjectPage", resourceCulture);
             }
