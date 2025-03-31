@@ -117,13 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="About" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>几净mini是一个轻量化的实用工具，用于保护个人隐私</value>
+  </data>
+  <data name="AllRightsReserved" xml:space="preserve">
+    <value>All rights reserved.</value>
+  </data>
   <data name="AutoStart" xml:space="preserve">
-    <value>开机自启动</value>
+    <value>开机启动</value>
+  </data>
+  <data name="DevelopedBy" xml:space="preserve">
+    <value>开发者</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>退出</value>
   </data>
   <data name="IncognitoMode" xml:space="preserve">
     <value>无痕模式</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>开源协议</value>
+  </data>
+  <data name="ProjectPage" xml:space="preserve">
+    <value>项目地址</value>
   </data>
 </root>

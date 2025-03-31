@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -21,6 +22,9 @@ namespace CleanRecentMini
         private FileSystemWatcher automaticDestinationsWatcher;
         private const string FOLDERS_APPID = "f01b4d95cf55d32a";
         private const string RECENT_FILES_APPID = "5f7b5f1e01b83767";
+
+        private ToolStripMenuItem languageMenu;
+        private Dictionary<string, ToolStripMenuItem> languageItems = new Dictionary<string, ToolStripMenuItem>();
 
         public MainWindow()
         {
@@ -65,6 +69,21 @@ namespace CleanRecentMini
                 Checked = config.IncognitoMode,
                 CheckOnClick = true
             };
+
+            languageMenu = new ToolStripMenuItem(Properties.Resources.Language);
+            foreach (var lang in Config.SupportedLanguages)
+            {
+                var langItem = new ToolStripMenuItem(lang.DisplayName)
+                {
+                    Tag = lang.Code,
+                    Checked = lang.Code == config.Language,
+                    CheckOnClick = false
+                };
+                langItem.Click += OnLanguageItemClick;
+                languageMenu.DropDownItems.Add(langItem);
+                languageItems[lang.Code] = langItem;
+            }
+
             var exitItem = new ToolStripMenuItem(
                 Properties.Resources.Exit,
                 null, OnExitClick);
@@ -73,11 +92,51 @@ namespace CleanRecentMini
             {
                 autoStartItem,
                 IncognitoModeItem,
+                languageMenu,
                 new ToolStripSeparator(),
                 exitItem
             });
 
             trayIcon.ContextMenuStrip = contextMenu;
+        }
+
+        private void OnLanguageItemClick(object sender, EventArgs e)
+        {
+            var menuItem = sender as ToolStripMenuItem;
+            if (menuItem != null && menuItem.Tag is string langCode)
+            {
+                foreach (var item in languageItems.Values)
+                {
+                    item.Checked = false;
+                }
+                menuItem.Checked = true;
+
+                config.Language = langCode;
+                Config.Save(config);
+
+                InitializeLanguage();
+
+                RefreshMenuTexts();
+            }
+        }
+
+        private void RefreshMenuTexts()
+        {
+            var contextMenu = trayIcon.ContextMenuStrip;
+            if (contextMenu != null)
+            {
+                if (contextMenu.Items[0] is ToolStripMenuItem autoStartItem)
+                    autoStartItem.Text = Properties.Resources.AutoStart;
+
+                if (contextMenu.Items[1] is ToolStripMenuItem incognitoModeItem)
+                    incognitoModeItem.Text = Properties.Resources.IncognitoMode;
+
+                if (contextMenu.Items[2] is ToolStripMenuItem languageMenuItem)
+                    languageMenuItem.Text = Properties.Resources.Language;
+
+                if (contextMenu.Items[4] is ToolStripMenuItem exitItem)
+                    exitItem.Text = Properties.Resources.Exit;
+            }
         }
 
         private void LoadConfig()
