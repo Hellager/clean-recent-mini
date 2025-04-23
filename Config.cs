@@ -10,8 +10,8 @@ namespace CleanRecentMini
         public string Language { get; set; } = "en-US";
         public bool AutoStart { get; set; } = false;
         public bool IncognitoMode { get; set; } = false;
-        public bool QueryFeasible { get; set; } = true;
-        public bool HandleFeasible { get; set; } = true;
+        public bool QueryFeasible { get; set; } = false;
+        public bool HandleFeasible { get; set; } = false;
 
         public static readonly List<LanguageInfo> SupportedLanguages = new List<LanguageInfo>
         {
@@ -37,8 +37,8 @@ namespace CleanRecentMini
                         Language = GetValueOrDefault<string>(tomlTable, "Language", "en-US"),
                         AutoStart = GetValueOrDefault<bool>(tomlTable, "AutoStart", false),
                         IncognitoMode = GetValueOrDefault<bool>(tomlTable, "IncognitoMode", false),
-                        QueryFeasible = GetValueOrDefault<bool>(tomlTable, "QueryFeasible", true),
-                        HandleFeasible = GetValueOrDefault<bool>(tomlTable, "HandleFeasible", true)
+                        QueryFeasible = GetValueOrDefault<bool>(tomlTable, "QueryFeasible", false),
+                        HandleFeasible = GetValueOrDefault<bool>(tomlTable, "HandleFeasible", false)
                     };
                 }
                 catch

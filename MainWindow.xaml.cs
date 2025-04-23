@@ -40,17 +40,23 @@ namespace CleanRecentMini
         public MainWindow()
         {
             InitializeLogger();
-            LoadConfig();
             InitializeLanguage();
             InitializeComponent();
             InitializeTrayIcon();
 
             _quickAccessManager = new QuickAccessManager();
-
-            if (config.IncognitoMode)
+            LoadConfigAsync().ContinueWith(_ =>
             {
-                StartWatching();
-            }
+                if (config.IncognitoMode)
+                {
+                    StartWatching();
+                }
+            });
+        }
+
+        private async Task LoadConfigAsync()
+        {
+            await Task.Run(() => LoadConfig());
         }
 
         private void InitializeLogger()
@@ -186,9 +192,16 @@ namespace CleanRecentMini
             }
         }
 
-        private void LoadConfig()
+        private async void LoadConfig()
         {
             config = Config.Load();
+            if (!config.QueryFeasible || !config.HandleFeasible)
+            {
+                var (queryFeasible, handleFeasible) = await _quickAccessManager.CheckFeasibleAsync();
+                config.QueryFeasible = queryFeasible;
+                config.HandleFeasible = handleFeasible;
+                Config.Save(config);
+            }
             UpdateAutoStart(config.AutoStart);
         }
 
