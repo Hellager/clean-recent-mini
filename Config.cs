@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
+using Tomlyn;
+using Tomlyn.Model;
 
 namespace CleanRecentMini
 {
@@ -9,16 +10,18 @@ namespace CleanRecentMini
         public string Language { get; set; } = "en-US";
         public bool AutoStart { get; set; } = false;
         public bool IncognitoMode { get; set; } = false;
+        public bool QueryFeasible { get; set; } = true;
+        public bool HandleFeasible { get; set; } = true;
 
         public static readonly List<LanguageInfo> SupportedLanguages = new List<LanguageInfo>
         {
             new LanguageInfo { Code = "en-US", DisplayName = "English" },
-            new LanguageInfo { Code = "zh-CN", DisplayName = "中文(简体)" }
+            new LanguageInfo { Code = "zh-CN", DisplayName = "中文" },
         };
 
         private static readonly string ConfigPath = Path.Combine(
             Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
-            "config.json");
+            "config.toml");
 
         public static Config Load()
         {
@@ -26,8 +29,17 @@ namespace CleanRecentMini
             {
                 try
                 {
-                    string json = File.ReadAllText(ConfigPath);
-                    return JsonSerializer.Deserialize<Config>(json);
+                    string tomlString = File.ReadAllText(ConfigPath);
+                    var tomlTable = Toml.ToModel(tomlString);
+
+                    return new Config
+                    {
+                        Language = GetValueOrDefault<string>(tomlTable, "Language", "en-US"),
+                        AutoStart = GetValueOrDefault<bool>(tomlTable, "AutoStart", false),
+                        IncognitoMode = GetValueOrDefault<bool>(tomlTable, "IncognitoMode", false),
+                        QueryFeasible = GetValueOrDefault<bool>(tomlTable, "QueryFeasible", true),
+                        HandleFeasible = GetValueOrDefault<bool>(tomlTable, "HandleFeasible", true)
+                    };
                 }
                 catch
                 {
@@ -36,6 +48,15 @@ namespace CleanRecentMini
             }
 
             return CreateDefaultConfig();
+        }
+
+        private static T GetValueOrDefault<T>(TomlTable table, string key, T defaultValue)
+        {
+            if (table.ContainsKey(key) && table[key] is T value)
+            {
+                return value;
+            }
+            return defaultValue;
         }
 
         private static Config CreateDefaultConfig()
@@ -54,12 +75,21 @@ namespace CleanRecentMini
         {
             try
             {
-                string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(ConfigPath, json);
+                var tomlTable = new TomlTable
+                {
+                    ["Language"] = config.Language,
+                    ["AutoStart"] = config.AutoStart,
+                    ["IncognitoMode"] = config.IncognitoMode,
+                    ["QueryFeasible"] = config.QueryFeasible,
+                    ["HandleFeasible"] = config.HandleFeasible
+                };
+
+                string tomlString = Toml.FromModel(tomlTable);
+                File.WriteAllText(ConfigPath, tomlString);
             }
             catch
             {
-                // failed to save config file, ingore failure
+                // failed to save config file, ignore failure
             }
         }
     }
