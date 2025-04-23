@@ -35,8 +35,6 @@ namespace CleanRecentMini
 
         private readonly object _processingLock = new object();
         private bool _isProcessing = false;
-
-        // 添加 QuickAccessManager 实例
         private IQuickAccessManager _quickAccessManager;
 
         public MainWindow()
@@ -47,7 +45,6 @@ namespace CleanRecentMini
             InitializeComponent();
             InitializeTrayIcon();
 
-            // 初始化 QuickAccessManager
             _quickAccessManager = new QuickAccessManager();
 
             if (config.IncognitoMode)
@@ -60,7 +57,7 @@ namespace CleanRecentMini
         {
             var logPath = Path.Combine(
                 Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
-                "logs", "log.txt");
+                "logs", "CleanRecentMini.log");
 
             var logConfig = new LoggerConfiguration()
                 .MinimumLevel.Information();
@@ -76,7 +73,7 @@ namespace CleanRecentMini
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}");
 
             Log.Logger = logConfig.CreateLogger();
-            Log.Information("CleanRecentMini 启动");
+            Log.Information("CleanRecentMini Started");
         }
 
         private void InitializeLanguage()
@@ -229,7 +226,7 @@ namespace CleanRecentMini
         {
             trayIcon.Visible = false;
             trayIcon.Dispose();
-            Log.Information("CleanRecentMini 退出");
+            Log.Information("CleanRecentMini Exited");
             Log.CloseAndFlush();
             System.Windows.Application.Current.Shutdown();
         }
@@ -266,7 +263,7 @@ namespace CleanRecentMini
 
                 if (!Directory.Exists(automaticDestPath))
                 {
-                    Log.Warning("无法监控快速访问：目录不存在 - {Path}", automaticDestPath);
+                    Log.Warning("Cannot monitor Quick Access: Directory does not exist - {Path}", automaticDestPath);
                     return;
                 }
 
@@ -281,11 +278,11 @@ namespace CleanRecentMini
                 automaticDestinationsWatcher.Created += OnAutomaticDestinationsChanged;
                 automaticDestinationsWatcher.EnableRaisingEvents = true;
 
-                Log.Information("开始监控快速访问变化");
+                Log.Information("Started monitoring Quick Access changes");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "启动监控时出错");
+                Log.Error(ex, "Error starting monitoring");
             }
         }
 
@@ -300,7 +297,7 @@ namespace CleanRecentMini
                 _currentRecentFiles.Clear();
                 _currentFrequentFolders.Clear();
 
-                Log.Information("停止监控快速访问变化");
+                Log.Information("Stopped monitoring Quick Access changes");
             }
         }
 
@@ -308,16 +305,15 @@ namespace CleanRecentMini
         {
             try
             {
-                // 替换原有的 QuickAccessQuery 实现，使用 quickAccessManager.GetItemsAsync
                 _currentRecentFiles = await _quickAccessManager.GetItemsAsync(QuickAccess.RecentFiles);
                 _currentFrequentFolders = await _quickAccessManager.GetItemsAsync(QuickAccess.FrequentFolders);
 
-                Log.Information("已刷新快速访问项目，最近文件数量: {RecentFileCount}，常用文件夹数量: {FrequentFolderCount}",
+                Log.Information("Quick Access items refreshed, Recent files count: {RecentFileCount}, Frequent folders count: {FrequentFolderCount}",
                     _currentRecentFiles.Count, _currentFrequentFolders.Count);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "刷新快速访问项目时出错");
+                Log.Error(ex, "Error refreshing Quick Access items");
             }
         }
 
@@ -325,26 +321,23 @@ namespace CleanRecentMini
         {
             try
             {
-                // 使用锁防止重复处理
                 lock (_processingLock)
                 {
                     if (_isProcessing) return;
                     _isProcessing = true;
                 }
 
-                // 防止重复触发，等待文件写入完成
                 await Task.Delay(500);
 
                 string fileName = Path.GetFileNameWithoutExtension(e.Name);
                 if (string.IsNullOrEmpty(fileName)) return;
 
-                // 移除文件扩展名部分
                 fileName = fileName.Replace(".automaticDestinations", "");
 
                 switch (fileName.ToLower())
                 {
                     case FOLDERS_APPID:
-                        Log.Information("常用文件夹已更改");
+                        Log.Information("Frequent folders changed");
                         if (config.IncognitoMode)
                         {
                             await ProcessFrequentFoldersChange();
@@ -352,7 +345,7 @@ namespace CleanRecentMini
                         break;
 
                     case RECENT_FILES_APPID:
-                        Log.Information("最近文件已更改");
+                        Log.Information("Recent files changed");
                         if (config.IncognitoMode)
                         {
                             await ProcessRecentFilesChange();
@@ -360,19 +353,18 @@ namespace CleanRecentMini
                         break;
 
                     default:
-                        Log.Debug("其他快速访问文件已更改: {FileName}", fileName);
+                        Log.Debug("Other Quick Access file changed: {FileName}", fileName);
                         break;
                 }
 
-                Log.Debug("变更类型: {ChangeType}, 完整路径: {FullPath}", e.ChangeType, e.FullPath);
+                Log.Debug("Change type: {ChangeType}, Full path: {FullPath}", e.ChangeType, e.FullPath);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "处理快速访问变更时出错");
+                Log.Error(ex, "Error processing Quick Access changes");
             }
             finally
             {
-                // 释放处理锁
                 lock (_processingLock)
                 {
                     _isProcessing = false;
@@ -384,20 +376,16 @@ namespace CleanRecentMini
         {
             try
             {
-                // 保存旧列表
                 var oldRecentFiles = new List<string>(_currentRecentFiles);
 
-                // 获取新列表，使用 quickAccessManager.GetItemsAsync 替代 QuickAccessQuery
                 var newRecentFiles = await _quickAccessManager.GetItemsAsync(QuickAccess.RecentFiles);
 
-                // 找出新增的文件
                 var addedFiles = newRecentFiles.Except(oldRecentFiles).ToList();
 
                 if (addedFiles.Count > 0)
                 {
-                    Log.Information("检测到 {Count} 个新增最近文件", addedFiles.Count);
+                    Log.Information("Detected {Count} new recent files", addedFiles.Count);
 
-                    // 获取所有文件的访问时间
                     var fileAccessTimes = new Dictionary<string, DateTime>();
                     foreach (var file in newRecentFiles)
                     {
@@ -410,11 +398,10 @@ namespace CleanRecentMini
                         }
                         catch (Exception ex)
                         {
-                            Log.Warning(ex, "获取文件访问时间失败: {File}", file);
+                            Log.Warning(ex, "Failed to get file access time: {File}", file);
                         }
                     }
 
-                    // 找出访问时间最新的文件
                     DateTime mostRecentTime = DateTime.MinValue;
                     string mostRecentFile = null;
 
@@ -429,53 +416,48 @@ namespace CleanRecentMini
 
                     foreach (var file in addedFiles)
                     {
-                        Log.Debug("检查新增文件: {File}", file);
+                        Log.Debug("Checking new file: {File}", file);
 
-                        // 检查是否是最近访问的文件
                         bool isRecentlyAccessed = false;
 
                         if (fileAccessTimes.ContainsKey(file))
                         {
-                            // 获取文件的访问时间
                             DateTime accessTime = fileAccessTimes[file];
 
-                            // 如果是最近访问的文件或接近最近访问时间（5秒内）
                             if (file == mostRecentFile || (mostRecentTime - accessTime).TotalSeconds <= 5)
                             {
                                 isRecentlyAccessed = true;
-                                Log.Debug("文件是最近访问的: {File}, 访问时间: {AccessTime}", file, accessTime);
+                                Log.Debug("File is recently accessed: {File}, Access time: {AccessTime}", file, accessTime);
                             }
                             else
                             {
-                                Log.Debug("文件不是最近访问的: {File}, 访问时间: {AccessTime}, 最新访问时间: {MostRecentTime}",
+                                Log.Debug("File is not recently accessed: {File}, Access time: {AccessTime}, Most recent time: {MostRecentTime}",
                                     file, accessTime, mostRecentTime);
                             }
                         }
                         else
                         {
-                            Log.Warning("无法获取文件访问时间: {File}", file);
+                            Log.Warning("Cannot get file access time: {File}", file);
                         }
 
                         if (isRecentlyAccessed)
                         {
-                            Log.Information("移除新增文件: {File}", file);
+                            Log.Information("Removing new file: {File}", file);
 
-                            // 从快速访问中移除新增文件，使用 QuickAccessManager 方式
                             await _quickAccessManager.RemoveItemAsync(file, QuickAccess.RecentFiles);
                         }
                         else
                         {
-                            Log.Debug("跳过非最近访问的文件: {File}", file);
+                            Log.Debug("Skipping non-recent file: {File}", file);
                         }
                     }
                 }
 
-                // 更新当前列表
                 _currentRecentFiles = await _quickAccessManager.GetItemsAsync(QuickAccess.RecentFiles);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "处理最近文件变更时出错");
+                Log.Error(ex, "Error processing recent files changes");
             }
         }
 
@@ -483,20 +465,16 @@ namespace CleanRecentMini
         {
             try
             {
-                // 保存旧列表
                 var oldFrequentFolders = new List<string>(_currentFrequentFolders);
 
-                // 获取新列表
                 var newFrequentFolders = await _quickAccessManager.GetItemsAsync(QuickAccess.FrequentFolders);
 
-                // 找出新增的文件夹
                 var addedFolders = newFrequentFolders.Except(oldFrequentFolders).ToList();
 
                 if (addedFolders.Count > 0)
                 {
-                    Log.Information("检测到 {Count} 个新增常用文件夹", addedFolders.Count);
+                    Log.Information("Detected {Count} new frequent folders", addedFolders.Count);
 
-                    // 获取所有文件夹的访问时间
                     var folderAccessTimes = new Dictionary<string, DateTime>();
                     foreach (var folder in newFrequentFolders)
                     {
@@ -509,11 +487,10 @@ namespace CleanRecentMini
                         }
                         catch (Exception ex)
                         {
-                            Log.Warning(ex, "获取文件夹访问时间失败: {Folder}", folder);
+                            Log.Warning(ex, "Failed to get folder access time: {Folder}", folder);
                         }
                     }
 
-                    // 找出访问时间最新的文件夹
                     DateTime mostRecentTime = DateTime.MinValue;
                     string mostRecentFolder = null;
 
@@ -528,63 +505,57 @@ namespace CleanRecentMini
 
                     foreach (var folder in addedFolders)
                     {
-                        Log.Debug("检查新增文件夹: {Folder}", folder);
+                        Log.Debug("Checking new folder: {Folder}", folder);
 
-                        // 检查是否是最近访问的文件夹
                         bool isRecentlyAccessed = false;
 
                         if (folderAccessTimes.ContainsKey(folder))
                         {
-                            // 获取文件夹的访问时间
                             DateTime accessTime = folderAccessTimes[folder];
 
-                            // 如果是最近访问的文件夹或接近最近访问时间（5秒内）
                             if (folder == mostRecentFolder || (mostRecentTime - accessTime).TotalSeconds <= 5)
                             {
                                 isRecentlyAccessed = true;
-                                Log.Debug("文件夹是最近访问的: {Folder}, 访问时间: {AccessTime}", folder, accessTime);
+                                Log.Debug("Folder is recently accessed: {Folder}, Access time: {AccessTime}", folder, accessTime);
                             }
                             else
                             {
-                                Log.Debug("文件夹不是最近访问的: {Folder}, 访问时间: {AccessTime}, 最新访问时间: {MostRecentTime}",
+                                Log.Debug("Folder is not recently accessed: {Folder}, Access time: {AccessTime}, Most recent time: {MostRecentTime}",
                                     folder, accessTime, mostRecentTime);
                             }
                         }
                         else
                         {
-                            Log.Warning("无法获取文件夹访问时间: {Folder}", folder);
+                            Log.Warning("Cannot get folder access time: {Folder}", folder);
                         }
 
                         if (isRecentlyAccessed)
                         {
-                            Log.Information("移除新增文件夹: {Folder}", folder);
+                            Log.Information("Removing new folder: {Folder}", folder);
 
-                            // 从快速访问中移除新增文件夹
                             await _quickAccessManager.RemoveItemAsync(folder, QuickAccess.FrequentFolders);
                         }
                         else
                         {
-                            Log.Debug("跳过非最近访问的文件夹: {Folder}", folder);
+                            Log.Debug("Skipping non-recent folder: {Folder}", folder);
                         }
                     }
 
-                    // 更新计数
                     int removedCount = addedFolders.Count(folder =>
                         folderAccessTimes.ContainsKey(folder) &&
                         (folder == mostRecentFolder || (mostRecentTime - folderAccessTimes[folder]).TotalSeconds <= 5));
 
                     if (removedCount > 0)
                     {
-                        Log.Information("已自动移除 {Count} 个常用文件夹", removedCount);
+                        Log.Information("Automatically removed {Count} frequent folders", removedCount);
                     }
                 }
 
-                // 更新当前列表
                 _currentFrequentFolders = await _quickAccessManager.GetItemsAsync(QuickAccess.FrequentFolders);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "处理常用文件夹变更时出错");
+                Log.Error(ex, "Error processing frequent folders changes");
             }
         }
     }
