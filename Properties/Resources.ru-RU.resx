@@ -140,4 +140,7 @@
 	<data name="Warning" xml:space="preserve">
 		<value>Предупреждение</value>
 	</data>
+	<data name="AlreadyRunning" xml:space="preserve">
+		<value>Программа уже запущена</value>
+	</data>
 </root>

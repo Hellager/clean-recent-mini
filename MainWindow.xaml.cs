@@ -19,8 +19,11 @@ namespace CleanRecentMini
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
+        private static Mutex _mutex = null;
+        private const string MutexName = "CleanRecentMini_SingleInstance_Mutex";
+        
         private NotifyIcon trayIcon;
         private Config config;
         private FileSystemWatcher automaticDestinationsWatcher;
@@ -37,8 +40,25 @@ namespace CleanRecentMini
         private bool _isProcessing = false;
         private IQuickAccessManager _quickAccessManager;
 
+        private bool _disposed = false;
+
         public MainWindow()
         {
+            bool createdNew;
+            _mutex = new Mutex(true, MutexName, out createdNew);
+
+            if (!createdNew)
+            {
+                Log.Warning("Another instance is already running");
+                System.Windows.MessageBox.Show(
+                    Properties.Resources.AlreadyRunning,
+                    Properties.Resources.Warning,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                Application.Current.Shutdown();
+                return;
+            }
+
             InitializeLogger();
             _quickAccessManager = new QuickAccessManager();
             
@@ -105,6 +125,48 @@ namespace CleanRecentMini
                     });
                 }
             });
+        }
+
+        ~MainWindow()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (trayIcon != null)
+                    {
+                        trayIcon.Visible = false;
+                        trayIcon.Dispose();
+                    }
+
+                    if (_mutex != null)
+                    {
+                        _mutex.ReleaseMutex();
+                        _mutex.Dispose();
+                        _mutex = null;
+                    }
+
+                    if (automaticDestinationsWatcher != null)
+                    {
+                        automaticDestinationsWatcher.EnableRaisingEvents = false;
+                        automaticDestinationsWatcher.Dispose();
+                        automaticDestinationsWatcher = null;
+                    }
+                }
+
+                _disposed = true;
+            }
         }
 
         private void InitializeLogger()
@@ -286,6 +348,14 @@ namespace CleanRecentMini
             trayIcon.Dispose();
             Log.Information("CleanRecentMini Exited");
             Log.CloseAndFlush();
+
+            if (_mutex != null)
+            {
+                _mutex.ReleaseMutex();
+                _mutex.Dispose();
+                _mutex = null;
+            }
+
             System.Windows.Application.Current.Shutdown();
         }
 

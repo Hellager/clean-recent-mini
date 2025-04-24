@@ -140,4 +140,7 @@
 	<data name="Warning" xml:space="preserve">
 		<value>Avertissement</value>
 	</data>
+	<data name="AlreadyRunning" xml:space="preserve">
+		<value>Le programme est déjà en cours d'exécution</value>
+	</data>
 </root>

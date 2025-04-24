@@ -159,4 +159,7 @@
   <data name="Warning" xml:space="preserve">
     <value>Warning</value>
   </data>
+  <data name="AlreadyRunning" xml:space="preserve">
+    <value>The program is already running</value>
+  </data>
 </root>

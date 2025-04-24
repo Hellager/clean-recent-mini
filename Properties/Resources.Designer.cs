@@ -88,6 +88,15 @@ namespace CleanRecentMini.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The program is already running.
+        /// </summary>
+        public static string AlreadyRunning {
+            get {
+                return ResourceManager.GetString("AlreadyRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto Start.
         /// </summary>
         public static string AutoStart {

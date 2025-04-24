@@ -126,6 +126,9 @@
   <data name="AllRightsReserved" xml:space="preserve">
     <value>All rights reserved.</value>
   </data>
+  <data name="AlreadyRunning" xml:space="preserve">
+    <value>The program is already running</value>
+  </data>
   <data name="AutoStart" xml:space="preserve">
     <value>Auto Start</value>
   </data>
