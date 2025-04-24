@@ -147,4 +147,16 @@
   <data name="ProjectPage" xml:space="preserve">
     <value>项目地址</value>
   </data>
+  <data name="CoreFunctionLimitedError" xml:space="preserve">
+    <value>核心功能{0}受限，相关功能已屏蔽</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>查询</value>
+  </data>
+  <data name="Handle" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
 </root>

@@ -40,17 +40,41 @@ namespace CleanRecentMini
         public MainWindow()
         {
             InitializeLogger();
-            InitializeLanguage();
-            InitializeComponent();
-            InitializeTrayIcon();
 
             _quickAccessManager = new QuickAccessManager();
             LoadConfigAsync().ContinueWith(_ =>
             {
-                if (config.IncognitoMode)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    StartWatching();
-                }
+                    if (!config.QueryFeasible || !config.HandleFeasible)
+                    {
+                        var limitedFeatures = new List<string>();
+                        if (!config.QueryFeasible)
+                            limitedFeatures.Add(Properties.Resources.Query);
+                        if (!config.HandleFeasible)
+                            limitedFeatures.Add(Properties.Resources.Handle);
+
+                        limitedFeatures.Add(Properties.Resources.Query);
+                        limitedFeatures.Add(Properties.Resources.Handle);
+                        var message = string.Format(
+                            Properties.Resources.CoreFunctionLimitedError,
+                            string.Join("/", limitedFeatures));
+
+                        System.Windows.MessageBox.Show(
+                            message,
+                            Properties.Resources.Warning,
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                    }
+
+                    InitializeLanguage();
+                    InitializeComponent();
+                    InitializeTrayIcon();
+                    if (config.IncognitoMode)
+                    {
+                        StartWatching();
+                    }
+                });
             });
         }
 

@@ -129,11 +129,17 @@
   <data name="AutoStart" xml:space="preserve">
     <value>Auto Start</value>
   </data>
+  <data name="CoreFunctionLimitedError" xml:space="preserve">
+    <value>Core functionality {0} is limited, related features have been disabled</value>
+  </data>
   <data name="DevelopedBy" xml:space="preserve">
     <value>Developed by</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
+  </data>
+  <data name="Handle" xml:space="preserve">
+    <value>Handle</value>
   </data>
   <data name="IncognitoMode" xml:space="preserve">
     <value>Incognito Mode</value>
@@ -146,5 +152,11 @@
   </data>
   <data name="ProjectPage" xml:space="preserve">
     <value>Project Page</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>Query</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
   </data>
 </root>

@@ -147,4 +147,16 @@
   <data name="ProjectPage" xml:space="preserve">
     <value>Project Page</value>
   </data>
+  <data name="CoreFunctionLimitedError" xml:space="preserve">
+    <value>Core functionality {0} is limited, related features have been disabled</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>Query</value>
+  </data>
+  <data name="Handle" xml:space="preserve">
+    <value>Handle</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
 </root>

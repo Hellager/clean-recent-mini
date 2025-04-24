@@ -97,6 +97,15 @@ namespace CleanRecentMini.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Core functionality {0} is limited, related features have been disabled.
+        /// </summary>
+        public static string CoreFunctionLimitedError {
+            get {
+                return ResourceManager.GetString("CoreFunctionLimitedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Developed by.
         /// </summary>
         public static string DevelopedBy {
@@ -111,6 +120,15 @@ namespace CleanRecentMini.Properties {
         public static string Exit {
             get {
                 return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handle.
+        /// </summary>
+        public static string Handle {
+            get {
+                return ResourceManager.GetString("Handle", resourceCulture);
             }
         }
         
@@ -147,6 +165,24 @@ namespace CleanRecentMini.Properties {
         public static string ProjectPage {
             get {
                 return ResourceManager.GetString("ProjectPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query.
+        /// </summary>
+        public static string Query {
+            get {
+                return ResourceManager.GetString("Query", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string Warning {
+            get {
+                return ResourceManager.GetString("Warning", resourceCulture);
             }
         }
     }
