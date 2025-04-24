@@ -16,7 +16,10 @@ namespace CleanRecentMini
         public static readonly List<LanguageInfo> SupportedLanguages = new List<LanguageInfo>
         {
             new LanguageInfo { Code = "en-US", DisplayName = "English" },
-            new LanguageInfo { Code = "zh-CN", DisplayName = "中文" },
+            new LanguageInfo { Code = "zh-CN", DisplayName = "中文(简体)" },
+            new LanguageInfo { Code = "zh-TW", DisplayName = "中文(繁體)" },
+            new LanguageInfo { Code = "fr-FR", DisplayName = "Français" },
+            new LanguageInfo { Code = "ru-RU", DisplayName = "Русский" }
         };
 
         private static readonly string ConfigPath = Path.Combine(
