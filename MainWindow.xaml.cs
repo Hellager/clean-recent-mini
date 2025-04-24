@@ -40,47 +40,71 @@ namespace CleanRecentMini
         public MainWindow()
         {
             InitializeLogger();
-
             _quickAccessManager = new QuickAccessManager();
-            LoadConfigAsync().ContinueWith(_ =>
+            
+            Task.Run(async () =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                try 
                 {
-                    bool hasFunctionLimitation = !config.QueryFeasible || !config.HandleFeasible;
-                    if (hasFunctionLimitation)
+                    await Application.Current.Dispatcher.InvokeAsync(async () =>
                     {
-                        var limitedFeatures = new List<string>();
-                        if (!config.QueryFeasible)
-                            limitedFeatures.Add(Properties.Resources.Query);
-                        if (!config.HandleFeasible)
-                            limitedFeatures.Add(Properties.Resources.Handle);
+                        config = Config.Load();
+                        if (!config.QueryFeasible || !config.HandleFeasible)
+                        {
+                            var (queryFeasible, handleFeasible) = await _quickAccessManager.CheckFeasibleAsync();
+                            config.QueryFeasible = queryFeasible;
+                            config.HandleFeasible = handleFeasible;
+                            Log.Information("Feasibility check completed: Query={query}, Handle={handle}", queryFeasible, handleFeasible);
+                            Config.Save(config);
+                        }
+                        UpdateAutoStart(config.AutoStart);
 
-                        var message = string.Format(
-                            Properties.Resources.CoreFunctionLimitedError,
-                            string.Join("/", limitedFeatures));
+                        bool hasFunctionLimitation = !config.QueryFeasible || !config.HandleFeasible;
+                        if (hasFunctionLimitation)
+                        {
+                            var limitedFeatures = new List<string>();
+                            if (!config.QueryFeasible)
+                                limitedFeatures.Add(Properties.Resources.Query);
+                            if (!config.HandleFeasible)
+                                limitedFeatures.Add(Properties.Resources.Handle);
 
+                            var message = string.Format(
+                                Properties.Resources.CoreFunctionLimitedError,
+                                string.Join("/", limitedFeatures));
+
+                            Log.Warning("Function limitations detected: {Features}", string.Join("/", limitedFeatures));
+
+                            System.Windows.MessageBox.Show(
+                                message,
+                                Properties.Resources.Warning,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                        }
+
+                        InitializeLanguage();
+                        InitializeComponent();
+                        InitializeTrayIcon(hasFunctionLimitation);
+                        
+                        if (config.IncognitoMode && !hasFunctionLimitation)
+                        {
+                            StartWatching();
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error during initialization");
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
                         System.Windows.MessageBox.Show(
-                            message,
+                            "Application initialization failed",
                             Properties.Resources.Warning,
                             MessageBoxButton.OK,
-                            MessageBoxImage.Warning);
-                    }
-
-                    InitializeLanguage();
-                    InitializeComponent();
-                    InitializeTrayIcon(hasFunctionLimitation);
-                    
-                    if (config.IncognitoMode && !hasFunctionLimitation)
-                    {
-                        StartWatching();
-                    }
-                });
+                            MessageBoxImage.Error);
+                        Application.Current.Shutdown();
+                    });
+                }
             });
-        }
-
-        private async Task LoadConfigAsync()
-        {
-            await Task.Run(() => LoadConfig());
         }
 
         private void InitializeLogger()
@@ -90,7 +114,7 @@ namespace CleanRecentMini
                 "logs", "CleanRecentMini.log");
 
             var logConfig = new LoggerConfiguration()
-                .MinimumLevel.Information();
+                .MinimumLevel.Debug();
 
 #if DEBUG
             logConfig = logConfig.WriteTo.Console();
@@ -116,6 +140,10 @@ namespace CleanRecentMini
 
         private void InitializeTrayIcon(bool hasFunctionLimitation)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(config.Language);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(config.Language);
+            Properties.Resources.Culture = new CultureInfo(config.Language);
+
             trayIcon = new NotifyIcon
             {
                 Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location),
@@ -123,6 +151,7 @@ namespace CleanRecentMini
             };
 
             var contextMenu = new ContextMenuStrip();
+
             var autoStartItem = new ToolStripMenuItem(
                 Properties.Resources.AutoStart,
                 null, OnAutoStartClick)
@@ -197,11 +226,15 @@ namespace CleanRecentMini
 
         private void RefreshMenuTexts()
         {
+            Properties.Resources.Culture = new CultureInfo(config.Language);
+            
             var contextMenu = trayIcon.ContextMenuStrip;
             if (contextMenu != null)
             {
                 if (contextMenu.Items[0] is ToolStripMenuItem autoStartItem)
+                {
                     autoStartItem.Text = Properties.Resources.AutoStart;
+                }
 
                 if (contextMenu.Items[1] is ToolStripMenuItem incognitoModeItem)
                     incognitoModeItem.Text = Properties.Resources.IncognitoMode;
@@ -215,19 +248,6 @@ namespace CleanRecentMini
                 if (contextMenu.Items[6] is ToolStripMenuItem exitItem)
                     exitItem.Text = Properties.Resources.Exit;
             }
-        }
-
-        private async void LoadConfig()
-        {
-            config = Config.Load();
-            if (!config.QueryFeasible || !config.HandleFeasible)
-            {
-                var (queryFeasible, handleFeasible) = await _quickAccessManager.CheckFeasibleAsync();
-                config.QueryFeasible = queryFeasible;
-                config.HandleFeasible = handleFeasible;
-                Config.Save(config);
-            }
-            UpdateAutoStart(config.AutoStart);
         }
 
         private void OnAutoStartClick(object sender, EventArgs e)
