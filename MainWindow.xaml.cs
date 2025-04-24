@@ -46,7 +46,8 @@ namespace CleanRecentMini
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (!config.QueryFeasible || !config.HandleFeasible)
+                    bool hasFunctionLimitation = !config.QueryFeasible || !config.HandleFeasible;
+                    if (hasFunctionLimitation)
                     {
                         var limitedFeatures = new List<string>();
                         if (!config.QueryFeasible)
@@ -54,8 +55,6 @@ namespace CleanRecentMini
                         if (!config.HandleFeasible)
                             limitedFeatures.Add(Properties.Resources.Handle);
 
-                        limitedFeatures.Add(Properties.Resources.Query);
-                        limitedFeatures.Add(Properties.Resources.Handle);
                         var message = string.Format(
                             Properties.Resources.CoreFunctionLimitedError,
                             string.Join("/", limitedFeatures));
@@ -69,8 +68,9 @@ namespace CleanRecentMini
 
                     InitializeLanguage();
                     InitializeComponent();
-                    InitializeTrayIcon();
-                    if (config.IncognitoMode)
+                    InitializeTrayIcon(hasFunctionLimitation);
+                    
+                    if (config.IncognitoMode && !hasFunctionLimitation)
                     {
                         StartWatching();
                     }
@@ -114,7 +114,7 @@ namespace CleanRecentMini
             Properties.Resources.Culture = culture;
         }
 
-        private void InitializeTrayIcon()
+        private void InitializeTrayIcon(bool hasFunctionLimitation)
         {
             trayIcon = new NotifyIcon
             {
@@ -134,8 +134,9 @@ namespace CleanRecentMini
                 Properties.Resources.IncognitoMode,
                 null, OnIncognitoModeClick)
             {
-                Checked = config.IncognitoMode,
-                CheckOnClick = true
+                Checked = config.IncognitoMode && !hasFunctionLimitation,
+                CheckOnClick = true,
+                Enabled = !hasFunctionLimitation
             };
 
             languageMenu = new ToolStripMenuItem(Properties.Resources.Language);
