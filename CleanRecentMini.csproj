@@ -255,7 +255,7 @@
   </Target>
   <Import Project="packages\Costura.Fody.6.0.0\build\Costura.Fody.targets" Condition="Exists('packages\Costura.Fody.6.0.0\build\Costura.Fody.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>PowerShell -Command "Get-ChildItem -Path '$(TargetDir)' -Recurse -Exclude *.exe | Where-Object { !$_.PSIsContainer } | Remove-Item -Force -Verbose" 
-PowerShell -Command "Get-ChildItem -LiteralPath '$(TargetDir)' -Directory | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue"</PostBuildEvent>
+    <PostBuildEvent>PowerShell -Command "Get-ChildItem -Path '$(TargetDir)' -File | Where-Object { $_.Extension -ne '.exe' } | Remove-Item -Force -Verbose"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
